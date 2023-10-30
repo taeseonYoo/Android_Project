@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Transaction_Project</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="myAuth">내 정보</string>
+    <string name="chat">채팅</string>
+    <string name="home">홈</string>
+    <string name="favorite">관심목록</string>
+    <string name="sale_history">판매내역</string>
+    <string name="pur_history">구매내역</string>
+    <string name="email">이메일</string>
+    <string name="password">비밀번호</string>
+    <string name="login">로그인</string>
+    <string name="myArticle">나의 거래</string>
+    <string name="favoriteList">관심목록</string>
+    <string name="filter">필터</string>
+    <string name="addItem">항목추가</string>
+    <string name="status">status</string>
+</resources>
