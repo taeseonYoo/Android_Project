@@ -25,15 +25,12 @@ class MainActivity : AppCompatActivity() {
         val chatFragment = ChatFragment()
         val infoFragment = InfoFragment()
 
-        //첫 프래그먼트는 홈 프래그먼트
+        //첫 프래그먼트를 homeFragment로 지정
         changeFragment(homeFragment)
-
 
         val navigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-
-
-        //하단 네비게이션 뷰 클릭 이벤트
+        //하단 네비게이션 뷰 클릭 이벤트로 프래그먼트 교체
         navigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.home -> changeFragment(homeFragment)
