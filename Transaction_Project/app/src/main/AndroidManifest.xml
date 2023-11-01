@@ -21,6 +21,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        채팅 테스트를 위해-->
+        <activity android:name=".ChatTestActivity"
+            android:theme="@style/CustomToolbar"/>
+
+
+
     </application>
 
 </manifest>
