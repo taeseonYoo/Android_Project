@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.transaction_project.R
-import com.example.transaction_project.ChatTestActivity
+import com.example.transaction_project.chat.ChatTestActivity
 
 class ChatFragment :Fragment(R.layout.chat_fragment) {
 

@@ -9,7 +9,7 @@ import com.example.transaction_project.R
 
 
 
-class ItemAdapter(val itemList:ArrayList<Product>):RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
+class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.product_list, parent, false)
