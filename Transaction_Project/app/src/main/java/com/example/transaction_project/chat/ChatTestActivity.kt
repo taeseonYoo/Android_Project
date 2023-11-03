@@ -3,12 +3,11 @@ package com.example.transaction_project.chat
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.R
-import com.example.transaction_project.home.ItemAdapter
-import com.example.transaction_project.home.Product
+
 
 
 class ChatTestActivity :AppCompatActivity() {
@@ -16,6 +15,10 @@ class ChatTestActivity :AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_test)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         val recyclerView = findViewById<RecyclerView>(R.id.message)
 
@@ -30,6 +33,9 @@ class ChatTestActivity :AppCompatActivity() {
 
         recyclerView.adapter = chatAdapter
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+
+
+
 
     }
 }
