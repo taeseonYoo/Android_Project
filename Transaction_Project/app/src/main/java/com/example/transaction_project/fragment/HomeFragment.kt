@@ -2,15 +2,19 @@ package com.example.transaction_project.fragment
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.R
 import com.example.transaction_project.home.ItemAdapter
 import com.example.transaction_project.home.Product
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class HomeFragment :Fragment(R.layout.home_fragment){
 
@@ -19,11 +23,27 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     private lateinit var addList: FloatingActionButton
     private lateinit var filterList: FloatingActionButton
 
+    private lateinit var itemAdapter : ItemAdapter
+    private lateinit var recyclerView : RecyclerView
+
+    private val db: FirebaseFirestore = Firebase.firestore
+    val itemsCollectionRef = db.collection("Items")
+
+    val itemList = arrayListOf<Product>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
-        //플로팅버튼 클릭 리스너
+
+        InitFabButton(view)
+        initItemAdapter()
+        getItemsList()
+
+    }
+
+    //FabButton 초기화
+    private fun InitFabButton(view: View){
         fab_button = view.findViewById(R.id.fab_button)
         addList = view.findViewById(R.id.addList)
         filterList = view.findViewById(R.id.filter)
@@ -32,29 +52,6 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         fab_button.setOnClickListener {
             toggleFab()
         }
-
-
-
-
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-
-        //전반적인 이미지를 확인하기 위하여 직접 상품을 넣음, 차후에 DB를 이용
-        val itemList = ArrayList<Product>()
-        itemList.add(Product("아이폰 15 pro","","150만원","2023-10-23","reserve"))
-        itemList.add(Product("캠핑 용품 팔아요","","50,000원","2023-9-25",""))
-        itemList.add(Product("애플 매직 트랙패드","","105,000원","2023-8-25","complete"))
-        itemList.add(Product("닌텐도 스위치","","250,000원","2023-7-25",""))
-        itemList.add(Product("아이폰 14 pro","","130만원","2023-10-23","reserve"))
-        itemList.add(Product("당근","","10,000원","2023-9-25",""))
-        itemList.add(Product("플스","","405,000원","2023-8-25","complete"))
-        itemList.add(Product("아아아","","2,500원","2023-7-25",""))
-
-        val itemAdapter = ItemAdapter(itemList)
-        itemAdapter.notifyDataSetChanged()
-
-        recyclerView.adapter = itemAdapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-
     }
 
     //플로팅액션버튼 선택 시 글 작성, 필터 버튼이 나타나도록
@@ -74,5 +71,52 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         isFabOpen = (!isFabOpen)
 
     }
+    private fun initItemAdapter(){
+
+        itemAdapter = ItemAdapter(itemList)
+
+        recyclerView.adapter = itemAdapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        itemAdapter.notifyDataSetChanged()
+    }
+
+    //아이템들을 DB에서 읽어옴 , 정상작동
+    private fun getItemsList(){
+        itemsCollectionRef
+            .get()
+            .addOnSuccessListener { result->
+                itemList.clear()
+                for(doc in result){
+                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
+                    itemList.add(item)
+                }
+                itemAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                    exception ->
+                Log.w("HomeFragment", "Error getting documents: $exception")
+            }
+
+    }
+
+    // 새 글 작성 창에서 -> DB로 데이터 삽입 , 정상작동
+    private fun pushItem(){
+        val test = Product("연습","","",456789,"")
+        itemsCollectionRef
+            .add(test)
+            .addOnSuccessListener {
+                Snackbar.make(requireView(),"정상적으로 등록되었습니다.",Snackbar.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                exception ->
+                Log.w("HomeFragment","Error adding documents: $exception")
+            }
+        itemAdapter.notifyDataSetChanged()
+    }
+
+
+
+
+
 
 }
