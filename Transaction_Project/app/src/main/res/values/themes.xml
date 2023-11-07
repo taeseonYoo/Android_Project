@@ -3,7 +3,7 @@
     <style name="Base.Theme.Transaction_Project" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-
+        <item name="colorPrimary">#FF9800</item>
         <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
         <item name="android:buttonStyle">@style/customButtonFontStyle</item>
         <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
@@ -12,6 +12,10 @@
     </style>
     <style name = "RoundedTextView">
         <item name="android:background">@drawable/reserve_status</item>
+    </style>
+
+    <style name="CustomToolbar" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#FF9800</item>
     </style>
 
     <style name="Theme.Transaction_Project" parent="Base.Theme.Transaction_Project" />
