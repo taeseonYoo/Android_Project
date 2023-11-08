@@ -28,6 +28,10 @@
             android:theme="@style/CustomToolbar"/>
 
 
+        <activity android:name=".SignUpActivity"/>
+
+        <activity android:name=".LoginActivity"/>
+
 
     </application>
 
