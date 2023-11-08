@@ -23,6 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        게시물 클릭 화면 전환 -->
+        <activity android:name=".fragment.ProductDetailActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
 <!--        채팅 테스트를 위해-->
         <activity android:name=".chat.ChatTestActivity"
             android:theme="@style/CustomToolbar"/>
