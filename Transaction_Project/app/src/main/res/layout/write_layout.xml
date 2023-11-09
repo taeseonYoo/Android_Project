@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id = "@+id/parentLayout"
+
+    >
+
+
+    <TextView
+        android:id="@+id/write_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="제목"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/write_editTitle"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/memo_border"
+        android:ems="10"
+        android:fontFamily="@font/font_style"
+        android:hint="제목을 입력해주세요."
+        android:inputType="text"
+        android:privateImeOptions="defaultInputmode=korean"
+        app:layout_constraintStart_toStartOf="@+id/write_title"
+        app:layout_constraintTop_toBottomOf="@+id/write_title" />
+
+    <Button
+        android:id="@+id/write_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#FF9800"
+        android:fontFamily="@font/font_style"
+        android:text="Category"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/write_editTitle"
+        app:layout_constraintTop_toBottomOf="@+id/write_editTitle" />
+
+    <EditText
+        android:id="@+id/write_price"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/memo_border"
+        android:ems="10"
+        android:fontFamily="@font/font_style"
+        android:hint="가격을 입력해주세요."
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/write_category"
+        app:layout_constraintTop_toBottomOf="@+id/write_category" />
+
+    <TextView
+        android:id="@+id/write_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="자세한 설명"
+        android:textSize="20sp"
+
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/write_price"
+        app:layout_constraintTop_toBottomOf="@+id/write_price" />
+
+    <EditText
+        android:id="@+id/write_editDetail"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/memo_border"
+        android:ems="10"
+        android:fontFamily="@font/font_style"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:privateImeOptions="defaultInputmode=korean"
+        app:layout_constraintStart_toStartOf="@+id/write_detail"
+        app:layout_constraintTop_toBottomOf="@+id/write_detail" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/write_categoryItem"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/memo_border"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/write_category"
+        app:layout_constraintTop_toTopOf="@+id/write_category" />
+
+    <Button
+        android:id="@+id/write_complete"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="#FF9800"
+        android:fontFamily="@font/font_style"
+        android:radius="0dp"
+        android:text="내 물건 등록하기"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/write_editDetail"
+        app:layout_constraintTop_toBottomOf="@+id/write_editDetail" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

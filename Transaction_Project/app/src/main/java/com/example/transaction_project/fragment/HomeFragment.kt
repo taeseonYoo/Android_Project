@@ -1,6 +1,8 @@
 package com.example.transaction_project.fragment
 
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -31,6 +33,47 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     val itemList = arrayListOf<Product>()
 
+   override fun onResume() {
+        super.onResume()
+        // 글 작성 액티비티 종료 후, recyclerView 업데이트를 위해 onResume() 오버라이드
+        // 업데이트 메소드
+        updateData()
+
+    }
+
+
+    private fun updateData() {
+
+
+        // sharedPreferences 에 저장한 데이터 불러오기
+        val sharedPreferences = requireContext().getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val title = sharedPreferences.getString("title", "")
+        val price = sharedPreferences.getString("price", "")
+        val category = sharedPreferences.getString("category", "")
+
+        // 세부 내용
+        val detail = sharedPreferences.getString("detail", "")
+
+
+        if (title != "") {
+            val previousItem =
+                Product(title ?: "", "", price ?: "" + " 원", category ?: "", "reserve")
+            itemList.add(previousItem)
+        }
+
+        // 중복 방지를 위해 데이터 삭제
+        editor.clear()
+        editor.apply()
+
+        val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
+        val itemAdapter = ItemAdapter(itemList)
+
+        recyclerView?.adapter = itemAdapter
+        recyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        itemAdapter.notifyDataSetChanged()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
@@ -52,6 +95,14 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         fab_button.setOnClickListener {
             toggleFab()
         }
+
+	// 글작성 버튼 클릭 -> 글쓰기 액티비티로 이동
+        addList.setOnClickListener{
+            val intent = Intent(activity, WriteActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+
+        }
     }
 
     //플로팅액션버튼 선택 시 글 작성, 필터 버튼이 나타나도록
@@ -71,6 +122,9 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         isFabOpen = (!isFabOpen)
 
     }
+
+
+
     private fun initItemAdapter(){
 
         itemAdapter = ItemAdapter(itemList)

@@ -26,6 +26,9 @@
 <!--        채팅 테스트를 위해-->
         <activity android:name=".chat.ChatTestActivity"
             android:theme="@style/CustomToolbar"/>
+	<activity android:name=".fragment.WriteActivity"
+            android:exported = "true"
+            />
 
 
 
