@@ -3,7 +3,12 @@ package com.example.transaction_project.fragment
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.MenuPopupHelper
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +40,6 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
-
         InitFabButton(view)
         initItemAdapter()
         getItemsList()
@@ -52,6 +56,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         fab_button.setOnClickListener {
             toggleFab()
         }
+        filterSelect()
     }
 
     //플로팅액션버튼 선택 시 글 작성, 필터 버튼이 나타나도록
@@ -99,6 +104,27 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     }
 
+    //overloading method for filter
+    private fun getItemsList(status : String){
+        itemsCollectionRef
+            .get()
+            .addOnSuccessListener { result->
+                itemList.clear()
+                for(doc in result){
+                    if(doc["status"] as String == status){
+                        val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
+                        itemList.add(item)
+                    }
+                }
+                itemAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                    exception ->
+                Log.w("HomeFragment", "Error getting documents: $exception")
+            }
+
+    }
+
     // 새 글 작성 창에서 -> DB로 데이터 삽입 , 정상작동
     private fun pushItem(){
         val test = Product("연습","","",456789,"")
@@ -108,13 +134,48 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                 Snackbar.make(requireView(),"정상적으로 등록되었습니다.",Snackbar.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
-                exception ->
+                    exception ->
                 Log.w("HomeFragment","Error adding documents: $exception")
             }
         itemAdapter.notifyDataSetChanged()
     }
 
 
+
+    private fun filterSelect(){
+        filterList.setOnClickListener {
+            val popupMenu = PopupMenu(requireContext(),it,Gravity.END)
+            val inflater = popupMenu.menuInflater
+            inflater.inflate(R.menu.popup_filter,popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener {
+                when(it.itemId){
+                    R.id.all->{
+                        getItemsList()
+                        true
+                    }
+                    R.id.sell->{
+                        getItemsList("onSale")
+                        true
+                    }
+                    R.id.reserve->{
+                        getItemsList("reserve")
+                        true
+
+                    }
+                    R.id.complete->{
+                        getItemsList("complete")
+                        true
+                    }
+                    else->false
+                }
+            }
+
+            popupMenu.show()
+
+        }
+
+    }
 
 
 

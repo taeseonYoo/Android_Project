@@ -74,8 +74,10 @@ class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAda
                 holder.tv_status.text = "거래완료"
                 holder.tv_status.setBackgroundResource(R.drawable.complete_status)
             }
-            ""->{ //판매중
-                holder.tv_status.visibility = View.INVISIBLE
+            "onSale"->{ //판매중
+                holder.tv_status.visibility = View.VISIBLE
+                holder.tv_status.text="판매중"
+                holder.tv_status.setBackgroundResource(R.drawable.onsale_status)
             }
 
         }
