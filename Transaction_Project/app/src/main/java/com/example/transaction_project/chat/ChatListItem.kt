@@ -9,3 +9,5 @@ data class ChatListItem(
     //val itemName : String
     //추가 할 사항??
 ){constructor():this("","","","", "")}
+
+//태선님 코드랑 충돌있는부분. 내가 고치면 될듯
