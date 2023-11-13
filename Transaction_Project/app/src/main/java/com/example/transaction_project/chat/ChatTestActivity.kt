@@ -14,7 +14,9 @@ import com.bumptech.glide.Glide
 import com.example.transaction_project.R
 import com.example.transaction_project.home.ItemAdapter
 import com.example.transaction_project.home.Product
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import org.w3c.dom.Text
@@ -69,11 +71,12 @@ class ChatTestActivity :AppCompatActivity() {
 
     //DB->CHATLIST->USERID->CHAT에 있는 컬렉션을 가져온다.
     private fun getChat(){
-            db.collection("/ChatList/userId/Chat").get()
+            db.collection("/ChatList/userId/Chat")
+                .orderBy("timeAt",Query.Direction.ASCENDING).get() //timeAt을 기준으로 오름차순해서 메세지를 가져옵니다.
             .addOnSuccessListener { result->
                 chatList.clear()
                 for(doc in result){
-                    val message = ChatListItem(doc["userId"] as String,"",doc["message"] as String)
+                    val message = ChatListItem(doc["userId"] as String,"",doc["message"] as String, doc["timeAt"] as Timestamp)
                     chatList.add(message)
                 }
                 chatAdapter.notifyDataSetChanged()

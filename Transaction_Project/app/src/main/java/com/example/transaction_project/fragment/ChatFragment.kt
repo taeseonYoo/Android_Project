@@ -17,8 +17,5 @@ class ChatFragment :Fragment(R.layout.chat_fragment) {
             val intent = Intent(requireContext(), ChatTestActivity::class.java)
             startActivity(intent)
         }
-
-
     }
-
 }

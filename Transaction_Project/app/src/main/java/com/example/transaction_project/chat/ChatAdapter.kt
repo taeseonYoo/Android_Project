@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.R
-import java.lang.IllegalArgumentException
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 //처음 채팅을 시작하는 경우에 대한 해결 필요
@@ -62,20 +65,26 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
     inner class SendViewHolder(itemView: View) : ChatViewHolder<ChatListItem>(itemView) {
         override fun bind(item: ChatListItem) {
             val message = itemView.findViewById<TextView>(R.id.textView)
+            val time = itemView.findViewById<TextView>(R.id.sendTime)
             message.text = item.message
+            time.text = formatTime(item.timeAt)
         }
     }
     //뷰홀더 추상 클래스 상속함 -> 보내는 메세지 사용
     inner class ReceiveViewHolder(itemView: View) : ChatViewHolder<ChatListItem>(itemView) {
         override fun bind(item: ChatListItem) {
             val message = itemView.findViewById<TextView>(R.id.textView)
+            val time = itemView.findViewById<TextView>(R.id.receiveTime)
             message.text = item.message
-//            val time = itemView.findViewById<TextView>(R.id.tv_time)
-//            time.text = Util.getTime(item.createdAt)
+            time.text = formatTime(item.timeAt)
         }
+
     }
-
-
+    //TimeFormatting ... timestamp to string(like a hh:mm)
+    fun formatTime(timestamp: Timestamp): String {
+        val format = SimpleDateFormat("a hh:mm", Locale.getDefault())
+        return format.format(timestamp.toDate())
+    }
 
 
 }
