@@ -58,7 +58,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
         if (title != "") {
             val previousItem =
-                Product(title ?: "", "", price ?: "" + " 원", category ?: "", "reserve")
+                Product(title ?: "", "", price ?: "" + " 원",  0, "reserve")
             itemList.add(previousItem)
         }
 
