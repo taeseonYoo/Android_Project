@@ -1,7 +1,10 @@
 package com.example.transaction_project.fragment
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -9,25 +12,36 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.viewModels
-import androidx.annotation.RequiresPermission
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.commit
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.transaction_project.MyViewModel
 import com.example.transaction_project.R
+import com.example.transaction_project.home.Product
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import java.util.Calendar
+import java.util.TimeZone
+import java.util.UUID
 
+
+private val db: FirebaseFirestore = Firebase.firestore
+val itemsCollectionRef = db.collection("Items")
 
 
 data class Category (val name: String)
 
 class WriteActivity : AppCompatActivity() {
+    private val PICK_IMAGE_REQUEST = 1
+    private lateinit var imageView: ImageView
+    private lateinit var storageReference: StorageReference
+    private var selectedImgUri : Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,19 +96,61 @@ class WriteActivity : AppCompatActivity() {
             }
         }
 
+        // 스토리지 참조 및 이미지뷰.
+        storageReference = FirebaseStorage.getInstance().reference
+        imageView = findViewById(R.id.write_img)
+
+        // 이미지 뷰 클릭시, 이미지 업로드 (저장 X)
+        imageView.setOnClickListener {
+            openGallery()
+        }
 
 
-        // 글 등록하기 버튼을 클릭 시, bundle 데이터를 가지고 홈 프래그먼트로 이동
+        // 글 등록하기 버튼을 클릭 시, 데이터를 db에 넘겨주고 종료
         val write_compleBtn = findViewById<Button>(R.id.write_complete)
         write_compleBtn.setOnClickListener{
-            write_to_home()
+            pushItem()
         }
 
     }
 
-    private fun write_to_home(){
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            selectedImgUri = data.data!!
+            // 이미지뷰에 선택한 이미지 표시
+            imageView.setImageURI(selectedImgUri)
 
+        }
+    }
 
+    private fun uploadImage(imageUri: Uri) {
+        val storageRef = storageReference.child("images/${UUID.randomUUID()}")
+        val uploadTask = storageRef.putFile(imageUri)
+
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            storageRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val downloadUri = task.result
+                // 추후 쓰일 수 있음
+            } else {
+
+            }
+        }
+    }
+
+    // 새 글 작성 창에서 -> DB로 데이터 삽입(만).
+    private fun pushItem(){
 
         // 글 제목, 가격, 내용, 카테고리 -> 프래그먼트로 넘겨줄 것
         val title = findViewById<EditText>(R.id.write_editTitle).text.toString()
@@ -102,20 +158,32 @@ class WriteActivity : AppCompatActivity() {
         val category = findViewById<Button>(R.id.write_category).text.toString()
         val detail = findViewById<EditText>(R.id.write_editDetail).text.toString()
 
-        // 데이터를 번들로 패키징
-        val sharedPreferences = getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("title", title)
-        editor.putString("price", price)
-        editor.putString("category", category)
-        editor.putString("detail", detail)
-        editor.apply()
+        val now = Calendar.getInstance(
+            TimeZone.getTimeZone("Asia/Seoul")).time
 
+
+        // 이미지를 스토리지에 업로드
+        selectedImgUri?.let { uploadImage(it) }
+        val product = Product(title, selectedImgUri.toString(), "$price 원", now.time, "", detail, category)
+        itemsCollectionRef
+            .add(product)
+            .addOnSuccessListener {
+                Snackbar.make(findViewById<ConstraintLayout>(R.id.parentLayout),"정상적으로 등록되었습니다.",Snackbar.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                    exception ->
+                Log.w("HomeFragment","Error adding documents: $exception")
+            }
+        try {
+            Thread.sleep(2000) // 2초 동안 대기
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
         finish()
 
-        Log.d("WriteActivity", "This is write activity:" + sharedPreferences.getString("title", ""))
-
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_write, menu)

@@ -36,53 +36,15 @@ class HomeFragment :Fragment(R.layout.home_fragment){
    override fun onResume() {
         super.onResume()
         // 글 작성 액티비티 종료 후, recyclerView 업데이트를 위해 onResume() 오버라이드
-        // 업데이트 메소드
-        updateData()
+        getItemsList()
 
-    }
-
-
-    private fun updateData() {
-
-
-        // sharedPreferences 에 저장한 데이터 불러오기
-        val sharedPreferences = requireContext().getSharedPreferences("MySharedPreferences", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        val title = sharedPreferences.getString("title", "")
-        val price = sharedPreferences.getString("price", "")
-        val category = sharedPreferences.getString("category", "")
-
-        // 세부 내용
-        val detail = sharedPreferences.getString("detail", "")
-
-
-        if (title != "") {
-            val previousItem =
-                Product(title ?: "", "", price ?: "" + " 원",  0, "reserve")
-            itemList.add(previousItem)
-        }
-
-        // 중복 방지를 위해 데이터 삭제
-        editor.clear()
-        editor.apply()
-
-        val recyclerView = view?.findViewById<RecyclerView>(R.id.recyclerView)
-        val itemAdapter = ItemAdapter(itemList)
-
-        recyclerView?.adapter = itemAdapter
-        recyclerView?.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        itemAdapter.notifyDataSetChanged()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-
-
         InitFabButton(view)
         initItemAdapter()
-        getItemsList()
-
     }
 
     //FabButton 초기화
@@ -141,7 +103,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             .addOnSuccessListener { result->
                 itemList.clear()
                 for(doc in result){
-                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
+                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "")
                     itemList.add(item)
                 }
                 itemAdapter.notifyDataSetChanged()
@@ -153,20 +115,6 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     }
 
-    // 새 글 작성 창에서 -> DB로 데이터 삽입 , 정상작동
-    private fun pushItem(){
-        val test = Product("연습","","",456789,"")
-        itemsCollectionRef
-            .add(test)
-            .addOnSuccessListener {
-                Snackbar.make(requireView(),"정상적으로 등록되었습니다.",Snackbar.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                exception ->
-                Log.w("HomeFragment","Error adding documents: $exception")
-            }
-        itemAdapter.notifyDataSetChanged()
-    }
 
 
 
