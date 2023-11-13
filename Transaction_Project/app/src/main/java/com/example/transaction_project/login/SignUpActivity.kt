@@ -8,11 +8,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.transaction_project.R
-import com.example.transaction_project.home.Product
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 //회원가입 화면. 회원가입 후에는 자동으로 로그인 화면으로 다시 넘어가게 된다. DB에도 정상적으로 값 삽입
@@ -21,7 +22,9 @@ class SignUpActivity  : AppCompatActivity() {
 
     private lateinit var signUpEmailEditText: EditText
     private lateinit var signUpPasswordEditText: EditText
-    private lateinit var signUpBirthEditText: EditText
+    private lateinit var signUpYearEditText: EditText
+    private lateinit var signUpMonthEditText: EditText
+    private lateinit var signUpDayEditText: EditText
     private lateinit var signUpNameEditText: EditText
     private lateinit var signUpButton2: Button
 
@@ -33,16 +36,21 @@ class SignUpActivity  : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
-        signUpBirthEditText = findViewById(R.id.signUpBirthEditText)
+        signUpYearEditText = findViewById(R.id.signUpYearEditText)
+        signUpMonthEditText = findViewById(R.id.signUpMonthEditText)
+        signUpDayEditText = findViewById(R.id.signUpDayEditText)
         signUpNameEditText = findViewById(R.id.signUpNameEditText)
         signUpEmailEditText = findViewById(R.id.signUpEmailEditText)
         signUpPasswordEditText = findViewById(R.id.signUpPasswordEditText)
         signUpButton2 = findViewById(R.id.signUpButton2)
 
+        //signUpBirthEditText.setText(SimpleDateFormat("YYYY/MM/dd", Locale.getDefault()).format(currentTime))
         signUpButton2.setOnClickListener {
 
             val name = signUpNameEditText.text.toString()
-            val birth = signUpBirthEditText.text.toString()
+            val year = signUpYearEditText.text.toString()
+            val month = signUpMonthEditText.text.toString()
+            val day = signUpDayEditText.text.toString()
             val email = signUpEmailEditText.text.toString()
             val password = signUpPasswordEditText.text.toString()
 
@@ -55,7 +63,9 @@ class SignUpActivity  : AppCompatActivity() {
                             //val test = UserInfo("dms", "20202020", "999@naver.com")
                             val userMap = hashMapOf(
                                 "name" to name,
-                                "birth" to birth,
+                                "year" to year,
+                                "month" to month,
+                                "day" to day,
                                 "email" to email
                             )
 
