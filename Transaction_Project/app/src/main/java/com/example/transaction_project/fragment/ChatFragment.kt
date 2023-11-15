@@ -64,7 +64,6 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
     }
 
     override fun onItemClick(chatRoomItem: ChatRoom) {
-        // Handle item click, start ChatTestActivity
         val intent = Intent(requireContext(), ChatTestActivity::class.java)
         // Pass necessary data to ChatTestActivity using intent extras if needed
         intent.putExtra("chatRoomId", chatRoomItem.sellerId)
