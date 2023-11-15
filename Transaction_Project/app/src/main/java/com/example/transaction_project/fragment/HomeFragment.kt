@@ -92,7 +92,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             .addOnSuccessListener { result->
                 itemList.clear()
                 for(doc in result){
-                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
+                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String, doc["content"] as String, doc["writer"] as String, doc["category"] as String)
                     itemList.add(item)
                 }
                 itemAdapter.notifyDataSetChanged()
@@ -112,7 +112,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                 itemList.clear()
                 for(doc in result){
                     if(doc["status"] as String == status){
-                        val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
+                        val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String, doc["content"] as String, doc["writer"] as String, doc["category"] as String)
                         itemList.add(item)
                     }
                 }
@@ -126,6 +126,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     }
 
     // 새 글 작성 창에서 -> DB로 데이터 삽입 , 정상작동
+    /*
     private fun pushItem(){
         val test = Product("연습","","",456789,"")
         itemsCollectionRef
@@ -141,6 +142,8 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     }
 
 
+
+     */
 
     private fun filterSelect(){
         filterList.setOnClickListener {
