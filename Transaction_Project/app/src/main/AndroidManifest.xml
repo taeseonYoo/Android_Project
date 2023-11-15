@@ -42,9 +42,9 @@
             />
 
 
-        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".login.SignUpActivity"/>
 
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".login.LoginActivity"/>
 
 
     </application>
