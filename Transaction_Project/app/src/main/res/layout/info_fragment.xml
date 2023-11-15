@@ -5,42 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--
-        <LinearLayout
-            android:id="@+id/logInLayout"
+    <LinearLayout
+        android:id="@+id/logInLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/myArticle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/myArticle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:hint="@string/email"
+            />
 
-            <EditText
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/email"
-                />
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/password"
+            />
 
-            <EditText
-                android:id="@+id/passwordEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="@string/password"
-                />
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/login" />
 
-            <Button
-                android:id="@+id/signUpButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="@string/login" />
+    </LinearLayout>
 
-        </LinearLayout>
 
-    !-->
     <TextView
         android:id="@+id/myArticle"
         android:layout_width="match_parent"
@@ -50,7 +49,8 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/layout1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/logInLayout" />
 
     <LinearLayout
         android:id="@+id/layout1"
@@ -63,12 +63,11 @@
         app:layout_constraintTop_toBottomOf="@+id/myArticle">
 
         <LinearLayout
-            android:id="@+id/favorite_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_margin="5dp"
-            android:orientation="horizontal">
-
+            android:id="@+id/favorite_layout">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,11 +83,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/sale_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:id="@+id/sale_layout">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -105,11 +104,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/pur_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:id="@+id/pur_layout">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -123,21 +122,9 @@
                 android:layout_marginStart="5dp"
                 android:gravity="center_vertical"
                 android:text="@string/pur_history" />
-
         </LinearLayout>
 
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/logOutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:backgroundTint="#FF9800"
-        android:fontFamily="@font/font_style"
-        android:text="로그아웃"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,17 +15,6 @@ import java.util.Date
 
 
 class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
-    interface OnItemClickListener {
-        fun onItemClick(position: Int)
-    }
-
-    // 클릭 리스너 변수를 선언합니다.
-    private var listener: OnItemClickListener? = null
-
-    // 클릭 리스너를 설정하는 메서드를 추가합니다.
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.listener = listener
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.product_list, parent, false)
@@ -68,18 +57,9 @@ class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAda
         val tv_price = itemView.findViewById<TextView>(R.id.price)
         val tv_status = itemView.findViewById<TextView>(R.id.status)
         val tv_img = itemView.findViewById<ImageView>(R.id.imageView)
-        val tv_content = itemView.findViewById<TextView>(R.id.contentTextView)
-        val tv_writer = itemView.findViewById<TextView>(R.id.writerTextView)
-        init {
-            // 클릭 이벤트를 처리하는 부분입니다.
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    listener?.onItemClick(position)
-                }
-            }
-        }
+
     }
+
     //판매상품의 상태를 확인하고 태그를 띄어준다.
     private fun setStatus(status: String, holder:ItemViewHolder ) {
 
@@ -94,10 +74,8 @@ class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAda
                 holder.tv_status.text = "거래완료"
                 holder.tv_status.setBackgroundResource(R.drawable.complete_status)
             }
-            "onSale"->{ //판매중
-                holder.tv_status.visibility = View.VISIBLE
-                holder.tv_status.text = "거래중"
-                holder.tv_status.setBackgroundResource(R.drawable.onsale_status)
+            ""->{ //판매중
+                holder.tv_status.visibility = View.INVISIBLE
             }
 
         }
