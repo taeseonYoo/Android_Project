@@ -1,7 +1,6 @@
 package com.example.transaction_project.fragment
 
 import android.animation.ObjectAnimator
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -33,18 +32,16 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     val itemList = arrayListOf<Product>()
 
-   override fun onResume() {
-        super.onResume()
-        // 글 작성 액티비티 종료 후, recyclerView 업데이트를 위해 onResume() 오버라이드
-        getItemsList()
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+
+
         InitFabButton(view)
         initItemAdapter()
+        getItemsList()
+
     }
 
     //FabButton 초기화
@@ -56,14 +53,6 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         // 플로팅액션 버튼이 위로 나오도록 애니메이션 설정
         fab_button.setOnClickListener {
             toggleFab()
-        }
-
-	// 글작성 버튼 클릭 -> 글쓰기 액티비티로 이동
-        addList.setOnClickListener{
-            val intent = Intent(activity, WriteActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            startActivity(intent)
-
         }
     }
 
@@ -84,18 +73,16 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         isFabOpen = (!isFabOpen)
 
     }
-
-
-
     private fun initItemAdapter(){
 
         itemAdapter = ItemAdapter(itemList)
 
         recyclerView.adapter = itemAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+
+
         itemAdapter.notifyDataSetChanged()
     }
-
     //아이템들을 DB에서 읽어옴 , 정상작동
     private fun getItemsList(){
         itemsCollectionRef
@@ -103,9 +90,40 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             .addOnSuccessListener { result->
                 itemList.clear()
                 for(doc in result){
-                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "")
+                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String, doc["content"] as String, doc["writer"] as String, doc["category"] as String)
                     itemList.add(item)
                 }
+
+                itemAdapter.setOnItemClickListener(object : ItemAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        // 클릭한 항목의 정보를 가져옵니다.
+                        val product = itemList[position]
+
+                        // Product의 정보를 사용하여 필요한 작업을 수행합니다.
+                        val title = product.title
+                        val imgUrl = product.imgUrl
+                        val writer = product.writer
+                        val content = product.content
+                        val price = product.price
+                        val time = product.time
+                        val status = product.status
+                        val category = product.category
+
+                        // 클릭 이벤트에 대한 작업 수행
+                        // 예: ProductDetailActivity를 시작하거나 다른 작업 수행
+                        val intent = Intent(context, ProductDetailActivity::class.java)
+
+                        intent.putExtra("title", title)
+                        intent.putExtra("imgUrl", imgUrl)
+                        intent.putExtra("price", price)
+                        intent.putExtra("time", time)
+                        intent.putExtra("writer", writer)
+                        intent.putExtra("content", content)
+                        intent.putExtra("status", status)
+                        intent.putExtra("category", category)
+                        context?.startActivity(intent)
+                    }
+                })
                 itemAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener {
@@ -115,6 +133,20 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     }
 
+    // 새 글 작성 창에서 -> DB로 데이터 삽입 , 정상작동
+    /* private fun pushItem(){
+         val test = Product("연습","","",456789,"")
+         itemsCollectionRef
+             .add(test)
+             .addOnSuccessListener {
+                 Snackbar.make(requireView(),"정상적으로 등록되었습니다.", Snackbar.LENGTH_SHORT).show()
+             }
+             .addOnFailureListener {
+                     exception ->
+                 Log.w("HomeFragment","Error adding documents: $exception")
+             }
+         itemAdapter.notifyDataSetChanged()
+     }*/
 
 
 
