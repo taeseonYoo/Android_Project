@@ -10,7 +10,16 @@ import com.example.transaction_project.R
 
 //목록창  adapter
 
-class ChatListAdapter(private val chatRoom: List<ChatRoom>) : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
+
+
+class ChatListAdapter(private val chatRoom: List<ChatRoom>,  private val onItemClickListener: OnChatItemClickListener)
+    : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
+
+    interface OnChatItemClickListener {
+        fun onItemClick(chatRoomItem: ChatRoom)
+    }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_list, parent, false)
@@ -20,6 +29,10 @@ class ChatListAdapter(private val chatRoom: List<ChatRoom>) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chatRoomItem = chatRoom[position]
         holder.bind(chatRoomItem)
+        holder.itemView.setOnClickListener {
+            onItemClickListener.onItemClick(chatRoomItem)
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -33,11 +46,13 @@ class ChatListAdapter(private val chatRoom: List<ChatRoom>) : RecyclerView.Adapt
         private val productImage: ImageView = itemView.findViewById(R.id.productImage)
         private val checkRead: TextView = itemView.findViewById(R.id.checkRead)
 
+
         fun bind(chatRoomItem: ChatRoom) {
             name.text = chatRoomItem.sellerId
             message.text = chatRoomItem.message
             checkRead.text = chatRoomItem.checkRead
             checkRead.visibility = if (chatRoomItem.checkRead.isNotEmpty()) View.VISIBLE else View.INVISIBLE
         }
+
     }
 }
