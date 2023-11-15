@@ -1,4 +1,4 @@
-package com.example.transaction_project.login
+package com.example.transaction_project
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.transaction_project.MainActivity
-import com.example.transaction_project.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -31,8 +31,16 @@ class LoginActivity : AppCompatActivity() {
         logInButton.setOnClickListener {
             val email = email.text.toString()
             val password = password.text.toString()
+
             doLogin(email, password)
+            /*
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+
+             */
         }
+
 
         //회원가입 버튼 누르면 회원가입 창으로 이동
         signUpButton.setOnClickListener {
@@ -53,27 +61,26 @@ class LoginActivity : AppCompatActivity() {
                     finish()
 
                 } else {
+                    Toast.makeText(this, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    /*
+    if (email.isNotEmpty() && password.isNotEmpty()) {
+        Firebase.auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) {
+                if (it.isSuccessful) {   //로그인 성공시 -> 홈화면으로 이동
+
+                    Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Login failed
                     Toast.makeText(this, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
-
+    } else {
+        Toast.makeText(this, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
     }
 }
-
-/*
-if (email.isNotEmpty() && password.isNotEmpty()) {
-    Firebase.auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener(this) {
-            if (it.isSuccessful) {   //로그인 성공시 -> 홈화면으로 이동
-
-                Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-            } else {
-                // Login failed
-                Toast.makeText(this, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
-            }
-        }
-} else {
-    Toast.makeText(this, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+ */
 }
-}
-*/

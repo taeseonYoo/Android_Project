@@ -16,70 +16,21 @@
 
 
     <EditText
-        android:id="@+id/signUpNameEditText"
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:fontFamily="@font/font_style"
-        android:hint="이름"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-
-    <EditText
-        android:id="@+id/signUpYearEditText"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/font_style"
-        android:hint="년(4자)"
-        android:inputType="date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpNameEditText" />
-
-    <EditText
-        android:id="@+id/signUpMonthEditText"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/font_style"
-        android:hint="월"
-        android:inputType="date"
-        app:layout_constraintEnd_toStartOf="@+id/signUpDayEditText"
-        app:layout_constraintStart_toEndOf="@+id/signUpYearEditText"
-        app:layout_constraintTop_toBottomOf="@+id/signUpNameEditText" />
-
-    <EditText
-        android:id="@+id/signUpDayEditText"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/font_style"
-        android:hint="일"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpNameEditText" />
-
-    <EditText
         android:id="@+id/signUpEmailEditText"
-        android:layout_width="360dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="48dp"
         android:fontFamily="@font/font_style"
         android:hint="@string/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpYearEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
         android:id="@+id/signUpPasswordEditText"
-        android:layout_width="360dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/font_style"
         android:hint="@string/password"
         android:inputType="textPassword"
@@ -87,20 +38,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpEmailEditText" />
 
-
     <Button
         android:id="@+id/signUpButton2"
-        android:layout_width="360dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="192dp"
         android:backgroundTint="#FF9800"
         android:fontFamily="@font/font_style"
         android:text="@string/join"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.609"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpPasswordEditText" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

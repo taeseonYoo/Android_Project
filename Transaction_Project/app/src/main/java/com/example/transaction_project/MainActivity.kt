@@ -1,17 +1,19 @@
 package com.example.transaction_project
 
-
 import android.content.Intent
+import android.icu.text.IDNA.Info
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.transaction_project.fragment.ChatFragment
-
 import com.example.transaction_project.fragment.HomeFragment
 import com.example.transaction_project.fragment.InfoFragment
-import com.example.transaction_project.login.LoginActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
