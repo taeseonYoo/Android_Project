@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.transaction_project.R
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -33,11 +34,10 @@ class ChatTestActivity :AppCompatActivity() {
     private lateinit var recyclerView : RecyclerView
     private lateinit var chatAdapter : ChatAdapter
     private lateinit var itemId : String
-    private lateinit var chatRoomId: String
+    private lateinit var documentId : String
 
     private val db: FirebaseFirestore = Firebase.firestore
     val chatList = arrayListOf<ChatListItem>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +50,9 @@ class ChatTestActivity :AppCompatActivity() {
 
         //인텐트로 아이템 아이디 가져오는 코드
         val intent = getIntent();
-        if (intent != null) {
+        if(intent != null){
             itemId = intent.getStringExtra("itemId").toString()
-            chatRoomId = intent.getStringExtra("chatRoomId").toString()
-            println(itemId)
+            documentId = intent.getStringExtra("chatRoomId").toString()
         }
         //인텐트 가져오는 코드 끝
 
@@ -80,22 +79,24 @@ class ChatTestActivity :AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
     }
 
-
+    val uid = Firebase.auth.currentUser?.uid
     private fun initSendMessage(){
         val msgInput = findViewById<EditText>(R.id.wt_chat)
         val sendMsg = findViewById<ImageButton>(R.id.sd_chat)
 
         sendMsg.setOnClickListener {
-            if (msgInput.text.toString() != "") {
-                val tmp = ChatListItem("2", "1", msgInput.text.toString(), Timestamp.now())
-                db.collection("ChatRoom").document(chatRoomId).collection("Chat").add(tmp)
+            if(msgInput.text.toString() != ""){
+                val tmp = ChatListItem(uid.toString(), msgInput.text.toString() , Timestamp.now())
+                db.collection("/ChatRoomList/${documentId}/Chat").add(tmp)
                     .addOnSuccessListener {
                         msgInput.setText("")
-                        chatList.add(tmp)
+                        //새로운 메세지를 확인 하는 두 가지 방식 fs. chatlist에 추가하고 변경을 알려 초기화 sd. initMessage 다시 한 번 데이터 가져오기.
+                        chatList.add(tmp)  // 이 방식을 이용하면 버그가 발생 할 것 같음.
                         chatAdapter.notifyDataSetChanged()
-                        loadItemDetails() // 추가: 새로운 메시지 추가 후 아이템 정보 로드
+                        //InitMessage()
                     }
-                    .addOnFailureListener { exception ->
+                    .addOnFailureListener {
+                            exception ->
                         Log.w("ChatTestActivity", "Error getting documents: $exception")
                     }
             }
@@ -106,32 +107,33 @@ class ChatTestActivity :AppCompatActivity() {
     //DB->CHATLIST->USERID->CHAT에 있는 컬렉션을 가져온다.
 
     private fun initMessage(){
-        db.collection("ChatRoom").document(chatRoomId).collection("Chat")
-            .orderBy("currentDate", Query.Direction.ASCENDING).get()
-            .addOnSuccessListener { result ->
+        println(documentId)
+        db.collection("/ChatRoomList/${documentId}/Chat")
+            .orderBy("timeAt",Query.Direction.ASCENDING).get() //timeAt을 기준으로 오름차순해서 메세지를 가져옵니다.
+            .addOnSuccessListener { result->
                 chatList.clear()
-                for (doc in result) {
-                    val userId = doc["userId"] as? String ?: ""
-                    val message = ChatListItem(
-                        userId, "", doc["message"] as? String ?: "",
-                        doc["currentDate"] as? Timestamp ?: Timestamp.now()
-                    )
+                for(doc in result){ //작성자 uid 가져온 것
+                    val message = ChatListItem(doc["uid"] as String,doc["message"] as String, doc["timeAt"] as Timestamp)
                     chatList.add(message)
                 }
                 chatAdapter.notifyDataSetChanged()
             }
-            .addOnFailureListener { exception ->
+            .addOnFailureListener {
+                    exception ->
                 Log.w("ChatTestActivity", "Error getting documents: $exception")
             }
+
     }
 
-    private fun initProfile() {
-        db.collection("ProductList")
-            .whereEqualTo("itemId", itemId)
+    //인텐트로 받아 온 itemId로 상품의 데이터를 설정한다.
+    private fun initProfile(){
+        db.collection("/TestItemList")
+            .whereEqualTo("itemId",itemId)
             .get()
             .addOnSuccessListener {
-                for (doc in it) {
-                    if (doc["imgUrl"].toString() != "") {
+                for(doc in it){
+
+                    if(doc["imgUrl"].toString() != ""){
                         Glide.with(item_img)
                             .load(doc["imgUrl"].toString())
                             .error(R.drawable.user)
@@ -139,43 +141,33 @@ class ChatTestActivity :AppCompatActivity() {
                     }
                     item_title.text = doc["title"].toString()
                     item_price.text = doc["price"].toString()
-                    user_name.title = doc["sellerId"].toString()
+
+                    //상대 유저의 이름? 추후에 변경 예정 , 필드 명도 변경 해야함
+
+                    findUserName(doc["sellerId"].toString())
                 }
             }
-            .addOnFailureListener { exception ->
+            .addOnFailureListener {
+                    exception ->
                 Log.w("ChatTestActivity", "Error getting documents: $exception")
             }
     }
 
-    //수정
-    private fun loadItemDetails() {
-        db.collection("ProductList").document(itemId)
+    private fun findUserName(otherUID : String){
+        db.document("/UserInfo/${otherUID}")
             .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    val imgUrl = document["imgUrl"].toString()
-                    val price = document["price"].toString()
-                    val title = document["title"].toString()
+            .addOnSuccessListener {
 
-                    for (item in chatList) {
-                        item.itemImgUrl = imgUrl
-                        item.itemPrice = price
-                        item.itemTitle = title
-                    }
+                user_name.title = it["name"] as? String
 
-                    chatAdapter.notifyDataSetChanged()
-                } else {
-                    Log.d("ChatTestActivity", "No such document")
-                }
             }
-            .addOnFailureListener { exception ->
-                Log.d("ChatTestActivity", "get failed with ", exception)
+            .addOnFailureListener {
+
             }
+        chatAdapter.notifyDataSetChanged()
     }
 
 
 
 
 }
-
-

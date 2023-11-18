@@ -26,6 +26,11 @@ class ChatListAdapter(private val chatRoomList: List<ChatRoom>,  private val onI
     }
 
 
+    fun submitList(newList: List<ChatRoom>) {
+        submitList(ArrayList(newList))
+    }
+
+
     //레이아웃 연결
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_list, parent, false)

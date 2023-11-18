@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.R
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 
@@ -19,6 +20,7 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
         private const val SEND_CHAT = 0
         private const val RECIEVE_CHAT = 1
     }
+    val uid = Firebase.auth.currentUser?.uid
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder<*> {
         return when(viewType){
@@ -45,9 +47,9 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
     //메세지 수신, 발신을 확인함
     override fun getItemViewType(position: Int): Int {
 
-        val check = chatList[position].userId
+        val check = chatList[position].uid
 
-        if(check=="2"){ //userId가 2일때 보내는 챗
+        if(check== uid ){ //내가 보낸 메세지
             return SEND_CHAT
         }
         return RECIEVE_CHAT
