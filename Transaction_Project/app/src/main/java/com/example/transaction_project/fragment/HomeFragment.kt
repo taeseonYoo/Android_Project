@@ -85,6 +85,8 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         itemAdapter.notifyDataSetChanged()
     }
 
+
+
     //아이템들을 DB에서 읽어옴 , 정상작동
     private fun getItemsList(){
         itemsCollectionRef
@@ -92,7 +94,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             .addOnSuccessListener { result->
                 itemList.clear()
                 for(doc in result){
-                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String, doc["content"] as String, doc["writer"] as String, doc["category"] as String)
+                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
                     itemList.add(item)
                 }
                 itemAdapter.notifyDataSetChanged()
@@ -112,7 +114,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                 itemList.clear()
                 for(doc in result){
                     if(doc["status"] as String == status){
-                        val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String, doc["content"] as String, doc["writer"] as String, doc["category"] as String)
+                        val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
                         itemList.add(item)
                     }
                 }

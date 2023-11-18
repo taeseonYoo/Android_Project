@@ -36,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
+    <!--
     <TextView
         android:id="@+id/checkRead"
         android:layout_width="wrap_content"
@@ -52,6 +53,7 @@
         app:layout_constraintEnd_toStartOf="@+id/productImage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.466" />
+        -->
 
     <ImageView
         android:id="@+id/productImage"

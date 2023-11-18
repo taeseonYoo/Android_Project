@@ -30,7 +30,7 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.receive_chat,parent,false)
                 ReceiveViewHolder(view)
             }
-            else-> throw IllegalArgumentException("faild")
+            else-> throw IllegalArgumentException("failed")
         }
     }
 

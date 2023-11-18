@@ -6,6 +6,9 @@ data class ChatListItem(
     val userId : String,
     val sellerId : String,
     val message : String,
-    val timeAt : Timestamp
+    val timeAt : Timestamp,
+    var itemImgUrl: String = "",
+    var itemPrice: String = "",
+    var itemTitle: String = ""
     //추가 할 사항??
 ){constructor():this("","","",Timestamp.now())}

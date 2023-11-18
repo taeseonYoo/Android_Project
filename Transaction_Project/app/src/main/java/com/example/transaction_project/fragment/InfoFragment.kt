@@ -9,6 +9,10 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.transaction_project.login.LoginActivity
 import com.example.transaction_project.R
 import com.example.transaction_project.home.Product
@@ -24,6 +28,7 @@ class InfoFragment : Fragment(R.layout.info_fragment) {
 
     private val db: FirebaseFirestore = Firebase.firestore
     private val userInfoCollectionRef = db.collection("UserInfo")
+    private val viewModel: UserInfoViewModel by viewModels()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,6 +42,7 @@ class InfoFragment : Fragment(R.layout.info_fragment) {
         getUserInfo(view)
     }
 
+
     private fun getUserInfo(view: View) {
         val currentUser = Firebase.auth.currentUser
         currentUser?.let { user ->
@@ -47,14 +53,18 @@ class InfoFragment : Fragment(R.layout.info_fragment) {
                     if (!documents.isEmpty) {
                         val userInfo = documents.documents[0].toObject(UserInfo::class.java)
                         userInfo?.let {
-                            val nameTextView = view.findViewById<TextView>(R.id.nameText)
-                            nameTextView.text = it.name
+                            viewModel.setName(it.name)
                         }
                     }
                 }
                 .addOnFailureListener { exception ->
                     Log.w("InfoFragment", "Error getting user information", exception)
                 }
+        }
+
+        viewModel.name.observe(viewLifecycleOwner) { newName ->
+            val nameTextView = view.findViewById<TextView>(R.id.nameText)
+            nameTextView.text = newName
         }
     }
 
@@ -77,4 +87,17 @@ class InfoFragment : Fragment(R.layout.info_fragment) {
 
 
     }
+
+
 }
+
+class UserInfoViewModel : ViewModel() {
+    private val username = MutableLiveData<String>()
+    val name: LiveData<String> get() = username
+
+    fun setName(name: String) {
+        username.value = name
+    }
+}
+
+

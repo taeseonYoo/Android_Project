@@ -23,8 +23,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-
+        supportActionBar?.apply {
+            hide()
+        }
         email = findViewById(R.id.emailEditText)
         password = findViewById(R.id.passwordEditText)
         logInButton = findViewById(R.id.logInButton)
@@ -61,21 +62,3 @@ class LoginActivity : AppCompatActivity() {
 
     }
 }
-
-/*
-if (email.isNotEmpty() && password.isNotEmpty()) {
-    Firebase.auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener(this) {
-            if (it.isSuccessful) {   //로그인 성공시 -> 홈화면으로 이동
-
-                Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-            } else {
-                // Login failed
-                Toast.makeText(this, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
-            }
-        }
-} else {
-    Toast.makeText(this, "아이디와 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
-}
-}
-*/

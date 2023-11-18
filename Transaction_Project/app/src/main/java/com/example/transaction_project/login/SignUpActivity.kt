@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.transaction_project.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -29,12 +30,25 @@ class SignUpActivity  : AppCompatActivity() {
     private lateinit var signUpButton2: Button
 
     private val db: FirebaseFirestore = Firebase.firestore
+    private val auth: FirebaseAuth = Firebase.auth
     private val userInfoCollectionRef = db.collection("UserInfo")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        supportActionBar?.apply {
+            hide()
+        }
+
+
 
         signUpYearEditText = findViewById(R.id.signUpYearEditText)
         signUpMonthEditText = findViewById(R.id.signUpMonthEditText)
@@ -44,7 +58,7 @@ class SignUpActivity  : AppCompatActivity() {
         signUpPasswordEditText = findViewById(R.id.signUpPasswordEditText)
         signUpButton2 = findViewById(R.id.signUpButton2)
 
-        //signUpBirthEditText.setText(SimpleDateFormat("YYYY/MM/dd", Locale.getDefault()).format(currentTime))
+
         signUpButton2.setOnClickListener {
 
             val name = signUpNameEditText.text.toString()
@@ -56,21 +70,24 @@ class SignUpActivity  : AppCompatActivity() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 Firebase.auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) {
+                    .addOnCompleteListener(this) {task->
 
-                        if (it.isSuccessful) { //회원가입 성공시. db에 데이터 삽입 후 화면 전환
+                        if (task.isSuccessful) { //회원가입 성공시. db에 데이터 삽입 후 화면 전환
+
                             Toast.makeText(this, "회원가입 성공!", Toast.LENGTH_SHORT).show()
-                            //val test = UserInfo("dms", "20202020", "999@naver.com")
-                            val userMap = hashMapOf(
-                                "name" to name,
-                                "year" to year,
-                                "month" to month,
-                                "day" to day,
-                                "email" to email
-                            )
+                            val user = auth.currentUser
+                            user?.let{
+                                val uid = it.uid
+                                val userMap = hashMapOf(
+                                    "name" to name,
+                                    "year" to year,
+                                    "month" to month,
+                                    "day" to day,
+                                    "email" to email
+                                )
 
-                            userInfoCollectionRef
-                                .add(userMap)
+                            userInfoCollectionRef.document(uid)
+                                .set(userMap)
                                 .addOnSuccessListener {
                                     val intent = Intent(this, LoginActivity::class.java)
                                     startActivity(intent)
@@ -78,19 +95,15 @@ class SignUpActivity  : AppCompatActivity() {
                                 }
                                 .addOnFailureListener {
                                 }
-
-
-                        } else { //회원가입 실패시
-                            Toast.makeText(this, "회원가입 실패. 아이디와 비밀번호를 확인해주세요", Toast.LENGTH_SHORT)
-                                .show()
+                            }
+                        } else {
+                            Toast.makeText(this, "회원가입 실패. 아이디와 비밀번호를 확인해주세요", Toast.LENGTH_SHORT).show()
                         }
                     }
-
             }
         }
     }
 }
-
 
 /* 수정전 코드. 일단 삭제x
 private lateinit var signUpEmailEditText: EditText
