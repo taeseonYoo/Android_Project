@@ -43,6 +43,8 @@ class InfoFragment : Fragment(R.layout.info_fragment) {
     }
 
 
+
+
     private fun getUserInfo(view: View) {
         val currentUser = Firebase.auth.currentUser
         currentUser?.let { user ->

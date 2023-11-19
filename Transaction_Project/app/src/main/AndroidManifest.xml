@@ -23,16 +23,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name = ".fragment.ProductDetailActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name = "android.intent.action.VIEW"/>
+                <category android:name = "android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+        </activity>
+
 <!--        채팅 테스트를 위해-->
         <activity android:name=".chat.ChatTestActivity"
             android:theme="@style/CustomToolbar"/>
 
+        <activity android:name=".fragment.WriteActivity"
+            android:exported = "true"
+            />
 
         <activity android:name=".login.SignUpActivity"/>
-
         <activity android:name=".login.LoginActivity"/>
-
-
     </application>
 
 </manifest>

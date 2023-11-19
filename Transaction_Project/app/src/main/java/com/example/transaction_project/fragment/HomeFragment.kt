@@ -1,6 +1,8 @@
 package com.example.transaction_project.fragment
 
 import android.animation.ObjectAnimator
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -36,13 +38,18 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     val itemList = arrayListOf<Product>()
 
+    override fun onResume() {
+        super.onResume()
+        // 글 작성 액티비티 종료 후, recyclerView 업데이트를 위해 onResume() 오버라이드
+        initItemAdapter()
+        getItemsList()
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
-
         InitFabButton(view)
-        initItemAdapter()
-        getItemsList()
 
     }
 
@@ -56,7 +63,17 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         fab_button.setOnClickListener {
             toggleFab()
         }
-        filterSelect()
+        // 글작성 버튼 클릭 -> 글쓰기 액티비티로 이동
+        addList.setOnClickListener{
+            val intent = Intent(activity, WriteActivity::class.java)
+            intent.putExtra("modify", false)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            startActivity(intent)
+
+        }
+
+        //filterSelect()
+
     }
 
     //플로팅액션버튼 선택 시 글 작성, 필터 버튼이 나타나도록
@@ -76,6 +93,9 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         isFabOpen = (!isFabOpen)
 
     }
+
+
+
     private fun initItemAdapter(){
 
         itemAdapter = ItemAdapter(itemList)
@@ -85,8 +105,6 @@ class HomeFragment :Fragment(R.layout.home_fragment){
         itemAdapter.notifyDataSetChanged()
     }
 
-
-
     //아이템들을 DB에서 읽어옴 , 정상작동
     private fun getItemsList(){
         itemsCollectionRef
@@ -94,30 +112,27 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             .addOnSuccessListener { result->
                 itemList.clear()
                 for(doc in result){
-                    val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
+                    val item = Product(doc["productId"] as? String?: "", doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "", doc["uid"] as? String?: "")
                     itemList.add(item)
                 }
-                itemAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener {
-                    exception ->
-                Log.w("HomeFragment", "Error getting documents: $exception")
-            }
 
-    }
+                itemAdapter.setOnItemClickListener(object : ItemAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
 
-    //overloading method for filter
-    private fun getItemsList(status : String){
-        itemsCollectionRef
-            .get()
-            .addOnSuccessListener { result->
-                itemList.clear()
-                for(doc in result){
-                    if(doc["status"] as String == status){
-                        val item = Product(doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String, doc["time"] as Long, doc["status"] as String)
-                        itemList.add(item)
+
+                        val product = itemList[position]
+                        // Product의 Id 만을 가져와 필요한 작업을 수행합니다.
+                        val productId = product.productId
+
+
+                        // 클릭 이벤트에 대한 작업 수행
+                        // 예: ProductDetailActivity를 시작하거나 다른 작업 수행
+                        val intent = Intent(context, ProductDetailActivity::class.java)
+                        intent.putExtra("productId",productId)
+                        context?.startActivity(intent)
                     }
-                }
+                })
+
                 itemAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener {
@@ -127,60 +142,44 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
     }
 
-    // 새 글 작성 창에서 -> DB로 데이터 삽입 , 정상작동
+
     /*
-    private fun pushItem(){
-        val test = Product("연습","","",456789,"")
-        itemsCollectionRef
-            .add(test)
-            .addOnSuccessListener {
-                Snackbar.make(requireView(),"정상적으로 등록되었습니다.",Snackbar.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                    exception ->
-                Log.w("HomeFragment","Error adding documents: $exception")
-            }
-        itemAdapter.notifyDataSetChanged()
-    }
+        private fun filterSelect(){
+            filterList.setOnClickListener {
+                val popupMenu = PopupMenu(requireContext(),it,Gravity.END)
+                val inflater = popupMenu.menuInflater
+                inflater.inflate(R.menu.popup_filter,popupMenu.menu)
 
+                popupMenu.setOnMenuItemClickListener {
+                    when(it.itemId){
+                        R.id.all->{
+                            getItemsList()
+                            true
+                        }
+                        R.id.sell->{
+                            getItemsList("onSale")
+                            true
+                        }
+                        R.id.reserve->{
+                            getItemsList("reserve")
+                            true
 
-
-     */
-
-    private fun filterSelect(){
-        filterList.setOnClickListener {
-            val popupMenu = PopupMenu(requireContext(),it,Gravity.END)
-            val inflater = popupMenu.menuInflater
-            inflater.inflate(R.menu.popup_filter,popupMenu.menu)
-
-            popupMenu.setOnMenuItemClickListener {
-                when(it.itemId){
-                    R.id.all->{
-                        getItemsList()
-                        true
+                        }
+                        R.id.complete->{
+                            getItemsList("complete")
+                            true
+                        }
+                        else->false
                     }
-                    R.id.sell->{
-                        getItemsList("onSale")
-                        true
-                    }
-                    R.id.reserve->{
-                        getItemsList("reserve")
-                        true
-
-                    }
-                    R.id.complete->{
-                        getItemsList("complete")
-                        true
-                    }
-                    else->false
                 }
-            }
 
-            popupMenu.show()
+                popupMenu.show()
+
+            }
 
         }
 
-    }
+     */
 
 
 
