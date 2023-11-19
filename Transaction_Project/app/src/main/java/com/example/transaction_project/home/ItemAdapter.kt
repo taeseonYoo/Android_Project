@@ -82,7 +82,6 @@ class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAda
     }
     //판매상품의 상태를 확인하고 태그를 띄어준다.
     private fun setStatus(status: String, holder:ItemViewHolder ) {
-
         when(status){
             "예약중"->{ //예약중
                 holder.tv_status.visibility = View.VISIBLE
