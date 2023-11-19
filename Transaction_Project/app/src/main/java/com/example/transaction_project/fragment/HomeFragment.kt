@@ -72,7 +72,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
         }
 
-        //filterSelect()
+        filterSelect()
 
     }
 
@@ -143,45 +143,59 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     }
 
 
-    /*
-        private fun filterSelect(){
-            filterList.setOnClickListener {
-                val popupMenu = PopupMenu(requireContext(),it,Gravity.END)
-                val inflater = popupMenu.menuInflater
-                inflater.inflate(R.menu.popup_filter,popupMenu.menu)
-
-                popupMenu.setOnMenuItemClickListener {
-                    when(it.itemId){
-                        R.id.all->{
-                            getItemsList()
-                            true
-                        }
-                        R.id.sell->{
-                            getItemsList("onSale")
-                            true
-                        }
-                        R.id.reserve->{
-                            getItemsList("reserve")
-                            true
-
-                        }
-                        R.id.complete->{
-                            getItemsList("complete")
-                            true
-                        }
-                        else->false
+    //overloading method for filter
+    private fun getItemsList(status : String){
+        itemsCollectionRef
+            .get()
+            .addOnSuccessListener { result->
+                itemList.clear()
+                for(doc in result){
+                    if(doc["status"] as String == status){
+                        val item = Product(doc["productId"] as? String?: "", doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "", doc["uid"] as? String?: "")
+                        itemList.add(item)
                     }
                 }
-
-                popupMenu.show()
-
+                itemAdapter.notifyDataSetChanged()
             }
+            .addOnFailureListener {
+                    exception ->
+                Log.w("HomeFragment", "Error getting documents: $exception")
+            }
+
+    }
+
+    private fun filterSelect(){
+        filterList.setOnClickListener {
+            val popupMenu = PopupMenu(requireContext(),it,Gravity.END)
+            val inflater = popupMenu.menuInflater
+            inflater.inflate(R.menu.popup_filter,popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener {
+                when(it.itemId){
+                    R.id.all->{
+                        getItemsList()
+                        true
+                    }
+                    R.id.sell->{
+                        getItemsList("onSale")
+                        true
+                    }
+                    R.id.reserve->{
+                        getItemsList("reserve")
+                        true
+
+                    }
+                    R.id.complete->{
+                        getItemsList("complete")
+                        true
+                    }
+                    else->false
+                }
+            }
+
+            popupMenu.show()
 
         }
 
-     */
-
-
-
-
+    }
 }
