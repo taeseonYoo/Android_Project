@@ -7,6 +7,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.transaction_project.login.LoginActivity
 import com.example.transaction_project.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
@@ -14,15 +19,48 @@ import com.google.firebase.ktx.Firebase
 
 class InfoFragment : Fragment(R.layout.info_fragment) {
 
+
+    private val db: FirebaseFirestore = Firebase.firestore
+    private val userInfoCollectionRef = db.collection("UserInfo")
+    private val viewModel: UserInfoViewModel by viewModels()
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initMyPage(view)
         val login = view.findViewById<Button>(R.id.signUpButton)
 
-        login?.setOnClickListener {
-            val userEmail = view.findViewById<EditText>(R.id.emailEditText)?.text.toString()
-            val password = view.findViewById<EditText>(R.id.passwordEditText)?.text.toString()
-            doLogin(userEmail, password)
+        logout?.setOnClickListener {
+            doLogOut()
+        }
+        getUserInfo(view)
+    }
+
+
+
+
+    private fun getUserInfo(view: View) {
+        val currentUser = Firebase.auth.currentUser
+        currentUser?.let { user ->
+            userInfoCollectionRef
+                .whereEqualTo("email", user.email)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (!documents.isEmpty) {
+                        val userInfo = documents.documents[0].toObject(UserInfo::class.java)
+                        userInfo?.let {
+                            viewModel.setName(it.name)
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("InfoFragment", "Error getting user information", exception)
+                }
+        }
+
+        viewModel.name.observe(viewLifecycleOwner) { newName ->
+            val nameTextView = view.findViewById<TextView>(R.id.nameText)
+            nameTextView.text = newName
         }
     }
 
@@ -48,4 +86,25 @@ class InfoFragment : Fragment(R.layout.info_fragment) {
         buyList.setOnClickListener { Snackbar.make(view,"buy", Snackbar.LENGTH_SHORT).show() }
     }
 
+    private fun doLogOut() {
+        Firebase.auth.signOut()
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+
+
+    }
+
+
 }
+
+class UserInfoViewModel : ViewModel() {
+    private val username = MutableLiveData<String>()
+    val name: LiveData<String> get() = username
+
+    fun setName(name: String) {
+        username.value = name
+    }
+}
+
+
