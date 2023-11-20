@@ -374,11 +374,14 @@ class WriteActivity : AppCompatActivity() {
 
     // edittext 바깥쪽 클릭시 키보드 내리기
     fun hideKeyboard() {
-        val inputManager = this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(
-            this.currentFocus!!.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
-        )
+        val currentFocusView = this.currentFocus //Null 유무 확인함으로써 오류 해결
+        if (currentFocusView != null) {
+            val inputManager = this.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                currentFocusView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
     }
 
 
