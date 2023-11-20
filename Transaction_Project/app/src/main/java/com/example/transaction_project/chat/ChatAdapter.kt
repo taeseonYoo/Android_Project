@@ -5,7 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.R
-import java.lang.IllegalArgumentException
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 //메세지를 DB로부터 가져 올 어댑터가 추가로 필요
@@ -18,6 +22,7 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
         private const val SEND_CHAT = 0
         private const val RECIEVE_CHAT = 1
     }
+    val uid = Firebase.auth.currentUser?.uid
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
         return when(viewType){
@@ -45,7 +50,9 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
         //ChatListItem이라는 data 클래스에 식별 할 만한 것이 userID밖에 없어서 테스트
         val nick = chatList[position].userId
 
-        if(nick=="1"){
+        val check = chatList[position].uid
+
+        if(check== uid ){ //내가 보낸 메세지
             return SEND_CHAT
         }
         return RECIEVE_CHAT
@@ -55,21 +62,35 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
         return chatList.count()
     }
 
-    //메세지 어댑터를 완성하면 보내는 것, 받는 것 따로 작성해야함
-    //추상 클래스 사용하기로한다.
-//    inner class SendViewHolder(chatView: View) : ChatViewHolder<>(chatView) {
-//
-//
-//
-//    }
-//    inner class RecieveViewHolder(chatView: View) : ChatViewHolder<>(chatView) {
-//
-//
-//    }
-//    abstract class ChatViewHolder<T>(chatView: View): RecyclerView.ViewHolder(chatView){
-//        abstract fun set(itemView : T)
-//    }
+    //뷰홀더 추상 클래스
+    abstract class ChatViewHolder<ChatListItem>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(item: ChatListItem)
+    }
 
+    //뷰홀더 추상 클래스 상속함 -> 받은 메세지 사용
+    inner class SendViewHolder(itemView: View) : ChatViewHolder<ChatListItem>(itemView) {
+        override fun bind(item: ChatListItem) {
+            val message = itemView.findViewById<TextView>(R.id.textView)
+            val time = itemView.findViewById<TextView>(R.id.sendTime)
+            message.text = item.message
+            time.text = formatTime(item.timeAt)
+        }
+    }
+    //뷰홀더 추상 클래스 상속함 -> 보내는 메세지 사용
+    inner class ReceiveViewHolder(itemView: View) : ChatViewHolder<ChatListItem>(itemView) {
+        override fun bind(item: ChatListItem) {
+            val message = itemView.findViewById<TextView>(R.id.textView)
+            val time = itemView.findViewById<TextView>(R.id.receiveTime)
+            message.text = item.message
+            time.text = formatTime(item.timeAt)
+        }
+
+    }
+    //TimeFormatting ... timestamp to string(like a hh:mm)
+    fun formatTime(timestamp: Timestamp): String {
+        val format = SimpleDateFormat("a hh:mm", Locale.getDefault())
+        return format.format(timestamp.toDate())
+    }
 
 
 }
