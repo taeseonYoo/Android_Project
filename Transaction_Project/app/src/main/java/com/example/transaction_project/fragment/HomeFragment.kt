@@ -19,6 +19,7 @@ import com.example.transaction_project.home.ItemAdapter
 import com.example.transaction_project.home.Product
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -112,7 +113,16 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             .addOnSuccessListener { result->
                 itemList.clear()
                 for(doc in result){
-                    val item = Product(doc["productId"] as? String?: "", doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "", doc["uid"] as? String?: "")
+                    val item = Product(
+                        doc["productId"] as? String?: "",
+                        doc["title"] as String,
+                        doc["imgUrl"] as String ,
+                        doc["price"] as String,
+                        doc["crDate"] as Timestamp,
+                        doc["status"] as String, doc["detail"] as? String?: "",
+                        doc["category"] as? String?: "",
+                        doc["sellerId"] as? String?: ""
+                    )
                     itemList.add(item)
                 }
 
@@ -151,7 +161,17 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                 itemList.clear()
                 for(doc in result){
                     if(doc["status"] as String == status){
-                        val item = Product(doc["productId"] as? String?: "", doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "", doc["uid"] as? String?: "")
+                        val item = Product(
+                            doc["productId"] as? String?: "",
+                            doc["title"] as String,
+                            doc["imgUrl"] as String ,
+                            doc["price"] as String,
+                            doc["crDate"] as Timestamp,
+                            doc["status"] as String,
+                            doc["detail"] as? String?: "",
+                            doc["category"] as? String?: "",
+                            doc["sellerId"] as? String?: ""
+                        )
                         itemList.add(item)
                     }
                 }

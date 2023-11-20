@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.transaction_project.R
 import java.text.SimpleDateFormat
 import java.util.Date
-
+import java.util.Locale
 
 
 class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
@@ -35,13 +35,13 @@ class ItemAdapter(val itemList:ArrayList<Product>): RecyclerView.Adapter<ItemAda
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
 
-        //Long타입의 데이터를 포맷하는 과정. 글 작성 시간을 데이터로 남기기
-        val format = SimpleDateFormat("MM월 dd일")
-        val date = Date(itemList[position].time)
+
+        val format = SimpleDateFormat("MM월 dd일", Locale.getDefault())
+        val date = format.format(itemList[position].crDate.toDate())
 
         holder.tv_title.text = itemList[position].title
         holder.tv_price.text ="${itemList[position].price} 원"
-        holder.tv_time.text = format.format(date).toString()
+        holder.tv_time.text = date.toString()
 
         //imgUrl로 이미지 불러오기
         if(itemList[position].imgUrl.isNotEmpty()){

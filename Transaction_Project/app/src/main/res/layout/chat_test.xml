@@ -97,25 +97,10 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message">
 
-        <ImageButton
-            android:id="@+id/extra"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/chat_img_area"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/plus"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <EditText
             android:id="@+id/wt_chat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:background="@drawable/input_text_area"
             android:hint="메세지를 입력하세요."
             android:paddingLeft="15dp"
@@ -124,21 +109,19 @@
             android:paddingBottom="10dp"
             android:textColorHint="@color/chat_gray"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/extra"
-            app:layout_constraintRight_toLeftOf="@id/sd_chat"
+            app:layout_constraintEnd_toStartOf="@+id/sd_chat"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/sd_chat"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="10dp"
             android:background="@drawable/chat_img_area"
             android:padding="5dp"
             android:scaleType="fitCenter"
             android:src="@drawable/send"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/wt_chat"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

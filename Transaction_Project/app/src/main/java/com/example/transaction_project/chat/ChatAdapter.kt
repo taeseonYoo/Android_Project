@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.transaction_project.FirestoreInstance
 import com.example.transaction_project.R
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
@@ -20,7 +21,7 @@ class ChatAdapter(val chatList : ArrayList<ChatListItem>):
         private const val SEND_CHAT = 0
         private const val RECIEVE_CHAT = 1
     }
-    val uid = Firebase.auth.currentUser?.uid
+    val uid = FirestoreInstance.auth.currentUser?.uid
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder<*> {
         return when(viewType){

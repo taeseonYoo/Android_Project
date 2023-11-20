@@ -19,7 +19,6 @@ import java.util.Locale
 class ChatListAdapter(private val chatRoomList: List<ChatRoom>,  private val onItemClickListener: OnChatItemClickListener)
     : RecyclerView.Adapter<ChatListAdapter.ChatViewHolder>() {
 
-    private val db: FirebaseFirestore = Firebase.firestore
 
     interface OnChatItemClickListener {
         fun onItemClick(chatRoomItem: ChatRoom)

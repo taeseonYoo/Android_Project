@@ -26,6 +26,7 @@ import com.example.transaction_project.R
 import com.example.transaction_project.home.Product
 import com.example.transaction_project.login.UserInfo
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -228,7 +229,7 @@ class WriteActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
                 val item = documents.documents[0]
-                uid = item.getString("uid").toString()
+                uid = item.getString("sellerId").toString()
 
                 val title = item.getString("title")
                 val price = item.getString("price")
@@ -290,7 +291,7 @@ class WriteActivity : AppCompatActivity() {
                 title,
                 imageUrl.toString(),
                 price,
-                now.time,
+                Timestamp.now(),
                 "판매중",
                 detail,
                 category,
@@ -333,7 +334,7 @@ class WriteActivity : AppCompatActivity() {
                         "price" to price,
                         "category" to category,
                         "detail" to detail,
-                        "time" to now.time,
+                        "crDate" to Timestamp.now(),
                         "status" to statusText,
                         "imgUrl" to imageUrl.toString()
                     )

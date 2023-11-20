@@ -1,7 +1,4 @@
 package com.example.transaction_project.chat
-import com.example.transaction_project.chat.ChatAdapter
-import com.example.transaction_project.chat.ChatListItem
-
 
 
 import android.os.Bundle
@@ -10,19 +7,16 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.transaction_project.FirestoreInstance
 import com.example.transaction_project.R
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+
 //아직 .. 미완성
 
 class ChatTestActivity :AppCompatActivity() {
@@ -33,11 +27,11 @@ class ChatTestActivity :AppCompatActivity() {
     private lateinit var user_name : Toolbar
     private lateinit var recyclerView : RecyclerView
     private lateinit var chatAdapter : ChatAdapter
-    private lateinit var itemId : String
+    private lateinit var productId : String
     private lateinit var documentId : String
 
-    private val db: FirebaseFirestore = Firebase.firestore
     val chatList = arrayListOf<ChatListItem>()
+    val uid = FirestoreInstance.auth.currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +45,7 @@ class ChatTestActivity :AppCompatActivity() {
         //인텐트로 아이템 아이디 가져오는 코드
         val intent = getIntent();
         if(intent != null){
-            itemId = intent.getStringExtra("itemId").toString()
+            productId = intent.getStringExtra("productId").toString()
             documentId = intent.getStringExtra("chatRoomId").toString()
         }
         //인텐트 가져오는 코드 끝
@@ -79,7 +73,7 @@ class ChatTestActivity :AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
     }
 
-    val uid = Firebase.auth.currentUser?.uid
+
     private fun initSendMessage(){
         val msgInput = findViewById<EditText>(R.id.wt_chat)
         val sendMsg = findViewById<ImageButton>(R.id.sd_chat)
@@ -87,7 +81,10 @@ class ChatTestActivity :AppCompatActivity() {
         sendMsg.setOnClickListener {
             if(msgInput.text.toString() != ""){
                 val tmp = ChatListItem(uid.toString(), msgInput.text.toString() , Timestamp.now())
-                db.collection("/ChatRoomList/${documentId}/Chat").add(tmp)
+                FirestoreInstance.chatRoomListRef
+                    .document(documentId)
+                    .collection("/Chat")
+                    .add(tmp)
                     .addOnSuccessListener {
                         msgInput.setText("")
                         //새로운 메세지를 확인 하는 두 가지 방식 fs. chatlist에 추가하고 변경을 알려 초기화 sd. initMessage 다시 한 번 데이터 가져오기.
@@ -107,8 +104,9 @@ class ChatTestActivity :AppCompatActivity() {
     //DB->CHATLIST->USERID->CHAT에 있는 컬렉션을 가져온다.
 
     private fun initMessage(){
-        println(documentId)
-        db.collection("/ChatRoomList/${documentId}/Chat")
+        FirestoreInstance.chatRoomListRef
+            .document(documentId)
+            .collection("/Chat")
             .orderBy("timeAt",Query.Direction.ASCENDING).get() //timeAt을 기준으로 오름차순해서 메세지를 가져옵니다.
             .addOnSuccessListener { result->
                 chatList.clear()
@@ -125,10 +123,10 @@ class ChatTestActivity :AppCompatActivity() {
 
     }
 
-    //인텐트로 받아 온 itemId로 상품의 데이터를 설정한다.
+    //인텐트로 받아 온 productId로 상품의 데이터를 설정한다.
     private fun initProfile(){
-        db.collection("/TestItemList")
-            .whereEqualTo("itemId",itemId)
+        FirestoreInstance.itemListRef
+            .whereEqualTo("productId" , productId)
             .get()
             .addOnSuccessListener {
                 for(doc in it){
@@ -154,10 +152,9 @@ class ChatTestActivity :AppCompatActivity() {
     }
 
     private fun findUserName(otherUID : String){
-        db.document("/UserInfo/${otherUID}")
+        FirestoreInstance.userInfoRef.document(otherUID)
             .get()
             .addOnSuccessListener {
-
                 user_name.title = it["name"] as? String
 
             }

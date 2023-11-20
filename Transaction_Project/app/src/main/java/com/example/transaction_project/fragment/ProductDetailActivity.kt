@@ -25,6 +25,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -189,13 +190,13 @@ class ProductDetailActivity : AppCompatActivity() {
                     return@addOnSuccessListener
                 }
                 val item = documents.documents[0]
-                uid = item.getString("uid").toString()
+                uid = item.getString("sellerId").toString()
 
                 val title = item.getString("title")
                 val price = item.getString("price")
                 val category = item.getString("category")
                 val detail = item.getString("detail")
-                val time = item.getLong("time")
+                val time = item.getTimestamp("crDate")
                 val status = item.getString("status")
                 val imgUrl = item.getString("imgUrl")
 
@@ -220,13 +221,14 @@ class ProductDetailActivity : AppCompatActivity() {
 
 
                     contentTextView.setBackgroundColor(Color.parseColor("#FFE0B2"))
-                    val format = SimpleDateFormat("MM월 dd일")
-                    val date = time?.let { Date(it) }
+
+                    val format = SimpleDateFormat("MM월 dd일", Locale.getDefault())
+                    val date = format.format(time?.toDate())
 
                     titleTextView.text = title
                     priceTextView.text = "${price} 원"
                     contentTextView.text = detail
-                    timeTextView.text = format.format(date).toString()
+                    timeTextView.text = date.toString()
                     categoryTextView.text = category
 
                     var writer: String
