@@ -3,128 +3,136 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="#FDFDFD"
+    android:backgroundTint="#FFFFFF">
 
-    <LinearLayout
-        android:id="@+id/logInLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/myArticle"
-        app:layout_constraintEnd_toEndOf="parent"
+
+    <ImageView
+        android:id="@+id/userImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/chat_user"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            />
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="@string/password"
-            />
-
-        <Button
-            android:id="@+id/signUpButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="@string/login" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 
     <TextView
-        android:id="@+id/myArticle"
-        android:layout_width="match_parent"
+        android:id="@+id/nameText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/myArticle"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/layout1"
+        android:layout_marginTop="28dp"
+        android:text="Name"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/logInLayout" />
+        app:layout_constraintHorizontal_bias="0.165"
+        app:layout_constraintStart_toEndOf="@+id/userImage"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="40dp"
         android:orientation="vertical"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.842"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myArticle">
+        app:layout_constraintTop_toBottomOf="@+id/userImage"
+        tools:ignore="MissingConstraints">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp"
-            android:id="@+id/favorite_layout">
+            android:layout_margin="10dp"
+            android:layout_marginStart="5dp"
+            android:text="나의 거래"
+            android:textSize="20dp"
+            android:textStyle="bold">
+
+        </TextView>
+
+        <LinearLayout
+            android:id="@+id/favorite_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:src="@drawable/favorite" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/favoriteList" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sale_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp"
-            android:id="@+id/sale_layout">
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:src="@drawable/receipt" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/sale_history" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/pur_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp"
-            android:id="@+id/pur_layout">
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:src="@drawable/shopping" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center_vertical"
                 android:text="@string/pur_history" />
+
         </LinearLayout>
 
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/logOutButton"
+        android:layout_width="109dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="232dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#FF9800"
+        android:fontFamily="@font/font_style"
+        android:text="로그아웃"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

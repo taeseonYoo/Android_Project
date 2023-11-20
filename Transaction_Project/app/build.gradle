@@ -48,9 +48,12 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+    implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore-ktx")
+
     //for glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.3.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     //end glide
     testImplementation 'junit:junit:4.13.2'
