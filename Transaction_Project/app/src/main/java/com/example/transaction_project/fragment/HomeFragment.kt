@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,15 +20,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class HomeFragment :Fragment(R.layout.home_fragment){
+class HomeFragment :Fragment(R.layout.home_fragment) {
 
     private var isFabOpen = false
     private lateinit var fab_button: FloatingActionButton
     private lateinit var addList: FloatingActionButton
     private lateinit var filterList: FloatingActionButton
 
-    private lateinit var itemAdapter : ItemAdapter
-    private lateinit var recyclerView : RecyclerView
+    private lateinit var itemAdapter: ItemAdapter
+    private lateinit var recyclerView: RecyclerView
 
     private val db: FirebaseFirestore = Firebase.firestore
     val itemsCollectionRef = db.collection("Items")
@@ -49,7 +51,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     }
 
     //FabButton 초기화
-    private fun InitFabButton(view: View){
+    private fun InitFabButton(view: View) {
         fab_button = view.findViewById(R.id.fab_button)
         addList = view.findViewById(R.id.addList)
         filterList = view.findViewById(R.id.filter)
@@ -59,7 +61,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
             toggleFab()
         }
         // 글작성 버튼 클릭 -> 글쓰기 액티비티로 이동
-        addList.setOnClickListener{
+        addList.setOnClickListener {
             val intent = Intent(activity, WriteActivity::class.java)
             intent.putExtra("modify", false)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
@@ -72,16 +74,15 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     }
 
     //플로팅액션버튼 선택 시 글 작성, 필터 버튼이 나타나도록
-    private fun toggleFab(){
-        if(isFabOpen){
-            ObjectAnimator.ofFloat(addList,"translationY",0f).apply { start() }
-            ObjectAnimator.ofFloat(filterList,"translationY",0f).apply { start() }
+    private fun toggleFab() {
+        if (isFabOpen) {
+            ObjectAnimator.ofFloat(addList, "translationY", 0f).apply { start() }
+            ObjectAnimator.ofFloat(filterList, "translationY", 0f).apply { start() }
             fab_button.setImageResource(R.drawable.plus)
 
-        }
-        else{
-            ObjectAnimator.ofFloat(addList,"translationY",-200f).apply { start() }
-            ObjectAnimator.ofFloat(filterList,"translationY",-400f).apply { start() }
+        } else {
+            ObjectAnimator.ofFloat(addList, "translationY", -200f).apply { start() }
+            ObjectAnimator.ofFloat(filterList, "translationY", -400f).apply { start() }
             fab_button.setImageResource(R.drawable.close)
         }
 
@@ -90,24 +91,34 @@ class HomeFragment :Fragment(R.layout.home_fragment){
     }
 
 
-
-    private fun initItemAdapter(){
+    private fun initItemAdapter() {
 
         itemAdapter = ItemAdapter(itemList)
 
         recyclerView.adapter = itemAdapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         itemAdapter.notifyDataSetChanged()
     }
 
     //아이템들을 DB에서 읽어옴 , 정상작동
-    private fun getItemsList(){
+    private fun getItemsList() {
         itemsCollectionRef
             .get()
-            .addOnSuccessListener { result->
+            .addOnSuccessListener { result ->
                 itemList.clear()
-                for(doc in result){
-                    val item = Product(doc["productId"] as? String?: "", doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "", doc["uid"] as? String?: "")
+                for (doc in result) {
+                    val item = Product(
+                        doc["productId"] as? String ?: "",
+                        doc["title"] as String,
+                        doc["imgUrl"] as String,
+                        doc["price"] as String,
+                        doc["time"] as Long,
+                        doc["status"] as String,
+                        doc["detail"] as? String ?: "",
+                        doc["category"] as? String ?: "",
+                        doc["uid"] as? String ?: ""
+                    )
                     itemList.add(item)
                 }
 
@@ -123,15 +134,14 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                         // 클릭 이벤트에 대한 작업 수행
                         // 예: ProductDetailActivity를 시작하거나 다른 작업 수행
                         val intent = Intent(context, ProductDetailActivity::class.java)
-                        intent.putExtra("productId",productId)
+                        intent.putExtra("productId", productId)
                         context?.startActivity(intent)
                     }
                 })
 
                 itemAdapter.notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                    exception ->
+            .addOnFailureListener { exception ->
                 Log.w("HomeFragment", "Error getting documents: $exception")
             }
 
@@ -139,52 +149,65 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
 
     //overloading method for filter
-    private fun getItemsList(status : String){
+    private fun getItemsList(status: String) {
         itemsCollectionRef
             .get()
-            .addOnSuccessListener { result->
+            .addOnSuccessListener { result ->
                 itemList.clear()
-                for(doc in result){
-                    if(doc["status"] as String == status){
-                        val item = Product(doc["productId"] as? String?: "", doc["title"] as String, doc["imgUrl"] as String ,doc["price"] as String,doc["time"] as Long, doc["status"] as String, doc["detail"] as? String?: "", doc["category"] as? String?: "", doc["uid"] as? String?: "")
+                for (doc in result) {
+                    if (doc["status"] as String == status) {
+                        val item = Product(
+                            doc["productId"] as? String ?: "",
+                            doc["title"] as String,
+                            doc["imgUrl"] as String,
+                            doc["price"] as String,
+                            doc["time"] as Long,
+                            doc["status"] as String,
+                            doc["detail"] as? String ?: "",
+                            doc["category"] as? String ?: "",
+                            doc["uid"] as? String ?: ""
+                        )
                         itemList.add(item)
                     }
                 }
                 itemAdapter.notifyDataSetChanged()
             }
-            .addOnFailureListener {
-                    exception ->
+            .addOnFailureListener { exception ->
                 Log.w("HomeFragment", "Error getting documents: $exception")
             }
 
     }
 
-    private fun filterSelect(){
+    private fun filterSelect() {
         filterList.setOnClickListener {
-            val popupMenu = PopupMenu(requireContext(),it,Gravity.END)
+            val popupMenu = PopupMenu(requireContext(), it, Gravity.END)
             val inflater = popupMenu.menuInflater
-            inflater.inflate(R.menu.popup_filter,popupMenu.menu)
+            inflater.inflate(R.menu.popup_filter, popupMenu.menu)
 
             popupMenu.setOnMenuItemClickListener {
-                when(it.itemId){
-                    R.id.all->{
+                when (it.itemId) {
+                    R.id.all -> {
                         getItemsList()
                         true
                     }
-                    R.id.sell->{
+
+                    R.id.sell -> {
                         getItemsList("onSale")
                         true
                     }
-                    R.id.reserve->{
+
+                    R.id.reserve -> {
                         getItemsList("reserve")
                         true
 
                     }
-                    R.id.complete->{
+
+                    R.id.complete -> {
                         getItemsList("complete")
                         true
                     }
-                    else->false
+
+                    else -> false
                 }
             }
 

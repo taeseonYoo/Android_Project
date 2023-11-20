@@ -8,3 +8,4 @@ data class ChatListItem(
     val timeAt : Timestamp
     //추가 할 사항??
 ){constructor():this("","",Timestamp.now())}
+
