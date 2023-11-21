@@ -50,6 +50,7 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
 
         intent.putExtra("chatRoomId",chatRoomItem.chatRoomId)
         intent.putExtra("productId",chatRoomItem.productId)
+        intent.putExtra("otherUserName",chatRoomItem.otherUserName)
         startActivity(intent)
     }
 
