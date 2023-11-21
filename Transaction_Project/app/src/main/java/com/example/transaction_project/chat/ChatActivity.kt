@@ -28,6 +28,7 @@ class ChatActivity :AppCompatActivity() {
     private lateinit var chatAdapter : ChatAdapter
     private lateinit var productId : String
     private lateinit var documentId : String
+    private lateinit var otherUserName : String
 
     val chatList = arrayListOf<ChatListItem>()
     val uid = FirestoreInstance.auth.currentUser?.uid
@@ -46,6 +47,7 @@ class ChatActivity :AppCompatActivity() {
         if(intent != null){
             productId = intent.getStringExtra("productId").toString()
             documentId = intent.getStringExtra("chatRoomId").toString()
+            otherUserName = intent.getStringExtra("otherUserName").toString()
         }
         //인텐트 가져오는 코드 끝
 
@@ -140,8 +142,9 @@ class ChatActivity :AppCompatActivity() {
                     item_price.text = doc["price"].toString()
 
                     //상대 유저의 이름? 추후에 변경 예정 , 필드 명도 변경 해야함
+                    user_name.title = otherUserName
 
-                    findUserName(doc["sellerId"].toString())
+                    //findUserName(doc["sellerId"].toString())
                 }
             }
             .addOnFailureListener {
@@ -150,18 +153,18 @@ class ChatActivity :AppCompatActivity() {
             }
     }
 
-    private fun findUserName(otherUID : String){
-        FirestoreInstance.userInfoRef.document(otherUID)
-            .get()
-            .addOnSuccessListener {
-                user_name.title = it["name"] as? String
-
-            }
-            .addOnFailureListener {
-
-            }
-        chatAdapter.notifyDataSetChanged()
-    }
+//    private fun findUserName(otherUID : String){
+//        FirestoreInstance.userInfoRef.document(otherUID)
+//            .get()
+//            .addOnSuccessListener {
+//                user_name.title = it["name"] as? String
+//
+//            }
+//            .addOnFailureListener {
+//
+//            }
+//        chatAdapter.notifyDataSetChanged()
+//    }
 
 
 
