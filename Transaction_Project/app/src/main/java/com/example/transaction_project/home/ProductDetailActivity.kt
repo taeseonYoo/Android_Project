@@ -17,8 +17,8 @@ import androidx.fragment.app.commit
 import com.bumptech.glide.Glide
 import com.example.transaction_project.MainActivity
 import com.example.transaction_project.R
-import com.example.transaction_project.home.ItemAdapter
-import com.example.transaction_project.home.Product
+import com.example.transaction_project.chat.ChatActivity
+import com.example.transaction_project.chat.ChatRoom
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -36,7 +36,7 @@ class ProductDetailActivity : AppCompatActivity() {
     val usersCollectionRef = db.collection("UserInfo")
     private lateinit var productId: String
     private lateinit var uid: String
-
+    private val chatRoom = arrayListOf<ChatRoom>()
 
 
 
@@ -66,8 +66,6 @@ class ProductDetailActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-
         when (item?.itemId) {
             R.id.menu_item_edit -> {
                 showConfirmationDialogModify()
@@ -254,13 +252,17 @@ class ProductDetailActivity : AppCompatActivity() {
             }
     }
 
-    fun messageAndCloseFunction() {
+    //여기 수정해야될듯
+    private fun messageAndCloseFunction() {
         // 메세지 버튼 기능 추가
         val message = findViewById<Button>(R.id.messageButton)
         message.setOnClickListener {
             /*val changeToMessage = messageFragment()
             changeFragment(changeToMessage)*/
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ChatActivity::class.java)
+            //intent.putExtra("chatRoomId",chatRoom.chatRoomId)
+            //intent.putExtra("productId",chatRoom.productId)
+
             startActivity(intent)
         } //message창 만들고.
 

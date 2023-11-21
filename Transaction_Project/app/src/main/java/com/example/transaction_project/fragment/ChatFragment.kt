@@ -47,7 +47,7 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
     //상품 목록이 클릭 되면 , 도큐먼트id와 itemid를 담아서 채팅액티비티 시작
     override fun onItemClick(chatRoomItem: ChatRoom) {
         val intent = Intent(requireContext(), ChatActivity::class.java)
-        // Pass necessary data to ChatTestActivity using intent extras if needed
+
         intent.putExtra("chatRoomId",chatRoomItem.chatRoomId)
         intent.putExtra("productId",chatRoomItem.productId)
         startActivity(intent)

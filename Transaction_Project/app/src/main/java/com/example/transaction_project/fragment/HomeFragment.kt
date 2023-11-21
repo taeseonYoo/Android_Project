@@ -214,9 +214,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                     else->false
                 }
             }
-
             popupMenu.show()
-
         }
 
     }

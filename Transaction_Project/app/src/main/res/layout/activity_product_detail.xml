@@ -33,7 +33,7 @@
                     android:id="@+id/imgUrlImageView"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="center"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

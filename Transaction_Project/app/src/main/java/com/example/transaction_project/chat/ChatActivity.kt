@@ -117,7 +117,7 @@ class ChatActivity :AppCompatActivity() {
             }
             .addOnFailureListener {
                     exception ->
-                Log.w("ChatTestActivity", "Error getting documents: $exception")
+                Log.w("ChatActivity", "Error getting documents: $exception")
             }
 
     }
