@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.FirestoreInstance
 import com.example.transaction_project.R
+import com.example.transaction_project.chat.ChatActivity
 import com.example.transaction_project.chat.ChatListAdapter
 import com.example.transaction_project.chat.ChatRoom
-import com.example.transaction_project.chat.ChatTestActivity
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 import java.util.Date
@@ -46,7 +46,7 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
 
     //상품 목록이 클릭 되면 , 도큐먼트id와 itemid를 담아서 채팅액티비티 시작
     override fun onItemClick(chatRoomItem: ChatRoom) {
-        val intent = Intent(requireContext(), ChatTestActivity::class.java)
+        val intent = Intent(requireContext(), ChatActivity::class.java)
         // Pass necessary data to ChatTestActivity using intent extras if needed
         intent.putExtra("chatRoomId",chatRoomItem.chatRoomId)
         intent.putExtra("productId",chatRoomItem.productId)

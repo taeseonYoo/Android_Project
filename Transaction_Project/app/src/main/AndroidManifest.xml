@@ -26,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name = ".fragment.ProductDetailActivity"
+        <activity android:name = ".home.ProductDetailActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name = "android.intent.action.VIEW"/>
@@ -35,9 +35,9 @@
             </intent-filter>
         </activity>
         <!--        채팅 테스트를 위해-->
-        <activity android:name=".chat.ChatTestActivity"
+        <activity android:name=".chat.ChatActivity"
             android:theme="@style/CustomToolbar"/>
-        <activity android:name=".fragment.WriteActivity"
+        <activity android:name=".home.WriteActivity"
             android:exported = "true"
             />
 

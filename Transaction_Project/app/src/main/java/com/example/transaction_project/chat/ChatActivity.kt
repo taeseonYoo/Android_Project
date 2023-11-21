@@ -17,9 +17,8 @@ import com.example.transaction_project.R
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 
-//아직 .. 미완성
-
-class ChatTestActivity :AppCompatActivity() {
+//채팅방
+class ChatActivity :AppCompatActivity() {
 
     private lateinit var item_img : ImageView
     private lateinit var item_title : TextView
@@ -35,7 +34,7 @@ class ChatTestActivity :AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.chat_test)
+        setContentView(R.layout.chat_detail)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
@@ -94,7 +93,7 @@ class ChatTestActivity :AppCompatActivity() {
                     }
                     .addOnFailureListener {
                             exception ->
-                        Log.w("ChatTestActivity", "Error getting documents: $exception")
+                        Log.w("ChatActivity", "Error getting documents: $exception")
                     }
             }
         }
@@ -147,7 +146,7 @@ class ChatTestActivity :AppCompatActivity() {
             }
             .addOnFailureListener {
                     exception ->
-                Log.w("ChatTestActivity", "Error getting documents: $exception")
+                Log.w("ChatActivity", "Error getting documents: $exception")
             }
     }
 

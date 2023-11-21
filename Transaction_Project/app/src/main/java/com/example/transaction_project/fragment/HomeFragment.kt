@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.transaction_project.R
 import com.example.transaction_project.home.ItemAdapter
 import com.example.transaction_project.home.Product
+import com.example.transaction_project.home.ProductDetailActivity
+import com.example.transaction_project.home.WriteActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Timestamp
@@ -197,16 +199,16 @@ class HomeFragment :Fragment(R.layout.home_fragment){
                         true
                     }
                     R.id.sell->{
-                        getItemsList("onSale")
+                        getItemsList("판매중")
                         true
                     }
                     R.id.reserve->{
-                        getItemsList("reserve")
+                        getItemsList("예약중")
                         true
 
                     }
                     R.id.complete->{
-                        getItemsList("complete")
+                        getItemsList("판매완료")
                         true
                     }
                     else->false
