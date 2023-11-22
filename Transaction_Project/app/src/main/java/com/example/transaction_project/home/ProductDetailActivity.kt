@@ -275,7 +275,6 @@ class ProductDetailActivity : AppCompatActivity() {
             }
     }
 
-    //여기 수정해야될듯
     private fun messageAndCloseFunction() {
         // 메세지 버튼 기능 추가
         val message = findViewById<Button>(R.id.messageButton)
@@ -292,7 +291,7 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
 
-    fun makeHeart() {
+    private fun makeHeart() {
         val heartButton = findViewById<ImageView>(R.id.heartButton)
 
         heartButton.setOnClickListener {

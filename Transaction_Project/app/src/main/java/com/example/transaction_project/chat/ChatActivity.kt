@@ -41,7 +41,7 @@ class ChatActivity :AppCompatActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
-            finish()
+            deleteChatRoom()
         }
 
         //인텐트로 아이템 아이디 가져오는 코드
@@ -179,6 +179,23 @@ class ChatActivity :AppCompatActivity() {
 //    }
 
 
-
+    private fun deleteChatRoom() {  //메세지 없으면 DB에서 삭제시킴
+        FirestoreInstance.chatRoomListRef
+            .document(documentId)
+            .collection("/Chat")
+            .get()
+            .addOnSuccessListener { message ->
+                if (message.isEmpty) {
+                    FirestoreInstance.chatRoomListRef
+                        .document(documentId)
+                        .delete()
+                        .addOnSuccessListener {
+                            finish()
+                        }
+                } else {
+                    finish()
+                }
+            }
+    }
 
 }
