@@ -177,7 +177,7 @@ class WriteActivity : AppCompatActivity() {
             val category = findViewById<Button>(R.id.write_category).text.toString()
             val detail = findViewById<EditText>(R.id.write_editDetail).text.toString()
 
-            if(title.isNotEmpty()&&price.isNotEmpty()&&category.isNotEmpty()&&detail.isNotEmpty()&&selectedImgUri!=null) {
+            if(title.isNotEmpty()&&price.isNotEmpty()&&category.isNotEmpty()&&detail.isNotEmpty()&&category!="카테고리") {
                 write_compleBtn.isEnabled= false
                 pushItem()
             }else{
