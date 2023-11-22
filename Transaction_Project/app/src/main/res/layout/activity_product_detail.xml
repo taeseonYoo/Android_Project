@@ -124,27 +124,37 @@
                             android:text="상태: 판매 중"
                             android:textSize="18sp" />
                     </LinearLayout>
-
-
-                    <TextView
-                        android:id="@+id/categoryTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:fontFamily="@font/font_style"
-                        android:text="카테고리"
-                        android:background="#FFE0B2"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:id="@+id/timeTextView"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="20dp"
-                        android:text="게시 날짜: 2023-11-06"
-                        android:textSize="18dp" />
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:textAlignment="center">
+
+                        <TextView
+                            android:id="@+id/categoryTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:fontFamily="@font/font_style"
+                            android:text="카테고리"
+                            android:background="#FFE0B2"
+                            android:textSize="20dp" />
+
+                        <TextView
+                            android:id="@+id/timeTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:text="게시 날짜: 2023-11-06"
+                            android:textSize="18dp" />
+
+
+
+                    </LinearLayout>
+
+
+
 
                     <View
                         android:layout_width="match_parent"

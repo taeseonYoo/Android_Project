@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -249,6 +250,19 @@ class ProductDetailActivity : AppCompatActivity() {
                         }
 
                     statusTextView.text = status
+
+                    when(status){
+                        "판매중"->{
+                            statusTextView.setBackgroundResource(R.drawable.onsale_status)
+                        }
+                        "예약중"->{
+                            statusTextView.setBackgroundResource(R.drawable.reserve_status)
+
+                        }
+                        "거래완료"->{
+                            statusTextView.setBackgroundResource(R.drawable.complete_status)
+                        }
+                    }
 
 
                 }

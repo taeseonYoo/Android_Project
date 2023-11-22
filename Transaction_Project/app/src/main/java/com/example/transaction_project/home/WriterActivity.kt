@@ -171,7 +171,21 @@ class WriteActivity : AppCompatActivity() {
         // 글 등록하기 버튼을 클릭 시, 데이터를 db에 넘겨주고 종료
         val write_compleBtn = findViewById<Button>(R.id.write_complete)
         write_compleBtn.setOnClickListener{
-            pushItem()
+            write_compleBtn.isEnabled= false
+            val title = findViewById<EditText>(R.id.write_editTitle).text.toString()
+            val price = findViewById<EditText>(R.id.write_price).text.toString()
+            val category = findViewById<Button>(R.id.write_category).text.toString()
+            val detail = findViewById<EditText>(R.id.write_editDetail).text.toString()
+
+            if(title.isNotEmpty()&&price.isNotEmpty()&&category.isNotEmpty()&&detail.isNotEmpty()&&selectedImgUri!=null) {
+                pushItem()
+            }else{
+                Snackbar.make(
+                    findViewById<ConstraintLayout>(R.id.parentLayout),
+                    "모든 내용을 작성해주세요.",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
 
     }
