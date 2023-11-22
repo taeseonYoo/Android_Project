@@ -118,6 +118,12 @@ class ChatActivity :AppCompatActivity() {
                     chatList.add(message)
                 }
                 chatAdapter.notifyDataSetChanged()
+
+                //제일 최근 아이템이 보이도록 스크롤위치조정
+                val lastItemPosition = chatAdapter.itemCount - 1
+                if (lastItemPosition >= 0) {
+                    recyclerView.scrollToPosition(lastItemPosition)
+                }
             }
             .addOnFailureListener {
                     exception ->
