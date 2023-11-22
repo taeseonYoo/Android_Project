@@ -326,9 +326,6 @@ class ProductDetailActivity : AppCompatActivity() {
                         chatRoom.add(ChatRoom(chatRoomId, "", "", Timestamp.now(), "", productId))
                     }
                 }
-                .addOnFailureListener {
-                    // Handle failure
-                }
         }
     }
 
@@ -369,8 +366,6 @@ class ProductDetailActivity : AppCompatActivity() {
                         intent.putExtra("productId", chatProductId)
                         intent.putExtra("otherUserName", otherUserName)
                         startActivity(intent)
-                    }
-                    .addOnFailureListener {
                     }
             }
         } else { //내가 작성한 글에 메세지를 보내려고 하는 경우
