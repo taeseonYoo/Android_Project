@@ -23,6 +23,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Title"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/date"
         app:layout_constraintEnd_toEndOf="parent"

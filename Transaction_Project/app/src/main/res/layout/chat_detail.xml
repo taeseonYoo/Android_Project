@@ -34,7 +34,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:scaleType="center"
+            android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -45,6 +45,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="테스트 상품명"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

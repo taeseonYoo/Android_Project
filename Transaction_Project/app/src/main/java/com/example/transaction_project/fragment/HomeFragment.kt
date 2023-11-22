@@ -208,7 +208,7 @@ class HomeFragment :Fragment(R.layout.home_fragment){
 
                     }
                     R.id.complete->{
-                        getItemsList("판매완료")
+                        getItemsList("거래완료")
                         true
                     }
                     else->false

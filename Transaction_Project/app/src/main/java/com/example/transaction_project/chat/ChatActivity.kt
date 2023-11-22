@@ -1,6 +1,7 @@
 package com.example.transaction_project.chat
 
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.example.transaction_project.FirestoreInstance
 import com.example.transaction_project.R
 import com.google.firebase.Timestamp
+import com.google.firebase.database.collection.LLRBNode
 import com.google.firebase.firestore.Query
 
 //채팅방
@@ -130,6 +132,17 @@ class ChatActivity :AppCompatActivity() {
             .whereEqualTo("productId" , productId)
             .get()
             .addOnSuccessListener {
+
+                if(it.isEmpty){
+                    item_title.text = "게시글이 삭제 되었습니다."
+                    item_title.setTextColor(Color.RED)
+                    item_price.text = ""
+                    user_name.title = ""
+                    item_img.setImageResource(R.drawable.user)
+                    findViewById<ImageButton>(R.id.sd_chat).isEnabled = false
+                    findViewById<EditText>(R.id.wt_chat).isEnabled = false
+                }
+
                 for(doc in it){
 
                     if(doc["imgUrl"].toString() != ""){
@@ -138,13 +151,12 @@ class ChatActivity :AppCompatActivity() {
                             .error(R.drawable.user)
                             .into(item_img)
                     }
+                    val tmp = doc["price"].toString() + "원"
                     item_title.text = doc["title"].toString()
-                    item_price.text = doc["price"].toString()
-
+                    item_price.text = tmp
                     //상대 유저의 이름? 추후에 변경 예정 , 필드 명도 변경 해야함
                     user_name.title = otherUserName
 
-                    //findUserName(doc["sellerId"].toString())
                 }
             }
             .addOnFailureListener {
