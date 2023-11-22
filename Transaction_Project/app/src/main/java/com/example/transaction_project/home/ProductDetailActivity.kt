@@ -10,15 +10,18 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.bumptech.glide.Glide
+import com.example.transaction_project.FirestoreInstance
 import com.example.transaction_project.MainActivity
 import com.example.transaction_project.R
 import com.example.transaction_project.chat.ChatActivity
 import com.example.transaction_project.chat.ChatRoom
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
@@ -26,6 +29,7 @@ import com.google.firebase.ktx.Firebase
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -37,7 +41,9 @@ class ProductDetailActivity : AppCompatActivity() {
     private lateinit var productId: String
     private lateinit var uid: String
     private val chatRoom = arrayListOf<ChatRoom>()
-
+    private lateinit var chatRoomId: String
+    private lateinit var otherUserName: String
+    //private lateinit var chatProductId: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +53,11 @@ class ProductDetailActivity : AppCompatActivity() {
         setTitle("중고 마켓")
         messageAndCloseFunction()
         makeHeart()
+        loadExistChatRoom()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.product_menu_option, menu)
-
         getAndSetData(menu)
         return true
     }
@@ -230,12 +236,15 @@ class ProductDetailActivity : AppCompatActivity() {
                     categoryTextView.text = category
 
                     var writer: String
+
+
                     val user = usersCollectionRef.document(uid)
                     user.get()
                         .addOnSuccessListener { documentSnapshot ->
                             if (documentSnapshot.exists()) {
                                 writer = documentSnapshot.getString("name").toString()
                                 writerTextView.text = writer
+                                otherUserName = writer
                             }
                         }
 
@@ -257,14 +266,8 @@ class ProductDetailActivity : AppCompatActivity() {
         // 메세지 버튼 기능 추가
         val message = findViewById<Button>(R.id.messageButton)
         message.setOnClickListener {
-            /*val changeToMessage = messageFragment()
-            changeFragment(changeToMessage)*/
-            val intent = Intent(this, ChatActivity::class.java)
-            //intent.putExtra("chatRoomId",chatRoom.chatRoomId)
-            //intent.putExtra("productId",chatRoom.productId)
-
-            startActivity(intent)
-        } //message창 만들고.
+            makeChatRoom()
+        }
 
         //close 버튼 기능 추가
         val close = findViewById<Button>(R.id.closeButton)
@@ -302,4 +305,77 @@ class ProductDetailActivity : AppCompatActivity() {
         }
         isHeartClicked = !isHeartClicked // 상태를 토글
     }
+
+    //기존에 있는 채팅방 불러오기
+    private fun loadExistChatRoom(){
+
+        val currentUser = Firebase.auth.currentUser //로그인 된 유저의 정보
+        val myUid= currentUser?.uid //로그인 된 유저의 정보
+
+        if (myUid != null) {
+            FirestoreInstance.chatRoomListRef
+                .whereArrayContains("authors", myUid)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val chatRoomId = document.id
+                        val authors = document["authors"] as List<String>
+                        val productId = document.getString("productId") ?: ""
+
+                        // 채팅방 정보를 chatRoomList에 추가
+                        chatRoom.add(ChatRoom(chatRoomId, "", "", Timestamp.now(), "", productId))
+                    }
+                }
+                .addOnFailureListener {
+                    // Handle failure
+                }
+        }
+    }
+
+    //기존에 생성된 채팅방 없는 경우 새로운 채팅방 만든다
+    private fun makeChatRoom(){
+
+        val currentUser = Firebase.auth.currentUser //로그인 된 유저의 정보
+        val myUid  = currentUser?.uid //로그인 된 유저의 정보
+        val sellerUid = uid //판매자 uid
+        val chatProductId = productId
+
+
+        if (myUid != sellerUid) {
+            val existingChatRoom = chatRoom.find { it.productId == chatProductId }
+
+            if (existingChatRoom != null) {
+                // 이미 채팅방이 생성된 경우에는 기존에 있는 채팅방으로 이동
+                val intent = Intent(this, ChatActivity::class.java)
+                intent.putExtra("chatRoomId", existingChatRoom.chatRoomId)
+                intent.putExtra("productId", chatProductId)
+                intent.putExtra("otherUserName", otherUserName)
+                startActivity(intent)
+            }
+            else {
+                // 생성된 채팅방이 없는 경우에는 새로운 채팅방 생성
+                val chatRoomData = hashMapOf(
+                    "authors" to listOf(myUid, sellerUid),
+                    "crDate" to Timestamp.now(),
+                    "productId" to chatProductId,
+                    "otherUserName" to otherUserName
+                )
+
+                FirestoreInstance.chatRoomListRef
+                    .add(chatRoomData)
+                    .addOnSuccessListener { documentReference ->
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("chatRoomId", documentReference.id)
+                        intent.putExtra("productId", chatProductId)
+                        intent.putExtra("otherUserName", otherUserName)
+                        startActivity(intent)
+                    }
+                    .addOnFailureListener {
+                    }
+            }
+        } else { //내가 작성한 글에 메세지를 보내려고 하는 경우
+            Toast.makeText(this, "내가 작성한 글입니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 }
