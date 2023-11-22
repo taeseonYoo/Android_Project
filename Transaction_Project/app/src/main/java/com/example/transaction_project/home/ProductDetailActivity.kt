@@ -321,8 +321,7 @@ class ProductDetailActivity : AppCompatActivity() {
                         val chatRoomId = document.id
                         val authors = document["authors"] as List<String>
                         val productId = document.getString("productId") ?: ""
-
-                        // 채팅방 정보를 chatRoomList에 추가
+                        // 채팅방 정보를 chatRoom에 추가
                         chatRoom.add(ChatRoom(chatRoomId, "", "", Timestamp.now(), "", productId))
                     }
                 }
