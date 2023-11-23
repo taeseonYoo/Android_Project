@@ -7,7 +7,7 @@ data class ChatRoom(
     val chatRoomId: String,
     val otherUserName: String,
     var lastMessage: String, //없애도 될거같음
-    val currentDate: Timestamp,
+    var currentDate: Timestamp,
     var imgUrl : String,
-    val productId : String,
+    val productId : String
 ){constructor():this("", "","",Timestamp.now(),"","")}

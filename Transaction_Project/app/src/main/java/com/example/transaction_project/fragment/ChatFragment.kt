@@ -33,6 +33,7 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
         super.onResume()
         initChatListAdapter(requireView())
         loadChatList()
+
     }
 
     private fun initChatListAdapter(view: View){
@@ -72,6 +73,7 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
                         loadOtherUserInfo(chatRoomId, otherUserUid, productId)
                     }
                 }
+
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents: ", exception)
@@ -107,10 +109,22 @@ class ChatFragment :Fragment(R.layout.chat_fragment), ChatListAdapter.OnChatItem
             .addOnSuccessListener { messages ->
                 if (!messages.isEmpty) {
                     val lastMessage = messages.documents[0]["message"] as String
-                    chatRoom.firstOrNull { it.chatRoomId == chatRoomId }?.lastMessage = lastMessage
-                    chatListAdapter.notifyDataSetChanged()
+                    val currentDate = messages.documents[0]["timeAt"] as Timestamp
+                    val chatRoom = chatRoom.firstOrNull { it.chatRoomId == chatRoomId }
+                    chatRoom?.lastMessage = lastMessage
+                    chatRoom?.currentDate = currentDate
+                    sortChatRoomList()
+
+
                 }
             }
+
+    }
+
+    //채팅방 리스트 시간별로 정렬
+    private fun sortChatRoomList() {
+        chatRoom.sortByDescending { chatroom -> chatroom.currentDate }
+        chatListAdapter.notifyDataSetChanged()
 
     }
     private fun getItemInfo(productId : String ) {

@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
             showMainScreen()
 
         } else {
-            // User is not logged in, show the login screen
             showLogin()
         }
     }
