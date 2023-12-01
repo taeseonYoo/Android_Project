@@ -34,7 +34,8 @@ class LoginActivity : AppCompatActivity() {
         logInButton.setOnClickListener {
             val email = email.text.toString()
             val password = password.text.toString()
-            doLogin(email, password)
+            if(email.isNotEmpty() && password.isNotEmpty())
+                doLogin(email, password)
         }
 
         //회원가입 버튼 누르면 회원가입 창으로 이동

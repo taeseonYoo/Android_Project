@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.transaction_project.MainActivity
 import com.example.transaction_project.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -89,9 +90,7 @@ class SignUpActivity  : AppCompatActivity() {
                             userInfoCollectionRef.document(uid)
                                 .set(userMap)
                                 .addOnSuccessListener {
-                                    val intent = Intent(this, LoginActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
+                                    doLogin(email, password)
                                 }
                                 .addOnFailureListener {
                                 }
@@ -102,6 +101,20 @@ class SignUpActivity  : AppCompatActivity() {
                     }
             }
         }
+    }
+    private fun doLogin(email: String, password: String) {
+        Firebase.auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { // it: Task<AuthResult!>
+                if (it.isSuccessful) {
+                    Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
     }
 }
 
